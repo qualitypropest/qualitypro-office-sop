@@ -98,6 +98,8 @@
   .tiles{display:grid;grid-template-columns:1fr;gap:10px}
   @media (min-width:620px){.tiles{grid-template-columns:1fr 1fr}}
   @media (min-width:960px){.tiles{grid-template-columns:1fr 1fr 1fr}}
+  /* Chapters list: single linear column at every width (tools grid unaffected) */
+  #tiles{grid-template-columns:1fr}
   .tile{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
     border-radius:var(--radius);padding:15px 16px;text-align:left;width:100%;color:var(--ink);box-shadow:var(--shadow)}
   .tile:active{transform:scale(.995)}
@@ -849,7 +851,7 @@ var TOOLS = [
   { id:'bee',     name:'Bee / Wasp Booking Wizard', sub:'Ask the five questions, tap the answers — Standard $345 or Advanced $425.', ref:'§3.7', icon:'wand' },
   { id:'quote',   name:'Quote Math Helper',        sub:'Discounts, the $195 inspection credit, travel surcharge and tax — the SOP way.', ref:'§6.7 + §3.6', icon:'calc' },
   { id:'plan',    name:'Plan Finder',              sub:'Tap the pests the client has — get the lowest plan that covers them all.', ref:'§8.2–8.4', icon:'wand' },
-  { id:'intake',  name:'Intake Call Wizard',       sub:'A new-client call, step by step: greeting, details, discovery, triage, booking, credit card.', ref:'§2.1–2.5', icon:'phone' },
+  { id:'intake',  name:'New Lead Intake Script',   sub:'One combined flow for a new-lead call — the New Lead Script word for word, with the SOP intake steps woven in.', ref:'§2.1–2.5', icon:'phone' },
   { id:'date',    name:'Scheduling Date Checker',  sub:'Blackout dates, trapping start days, the Tue–Fri 8–10 AM rule and time-window templates.', ref:'§12 + §9.1', icon:'clock' }
 ];
 var currentTool = null;
@@ -1298,8 +1300,9 @@ function planUpdate(){
     + '</div>';
 }
 
-/* ---------- TOOL 6: Intake Call Wizard (§2.1–2.5) ---------- */
+/* ---------- TOOL 6: New Lead Intake Script (New Lead Script & Flow + SOP §2.1–2.5, one combined flow) ---------- */
 var intake = null;
+var INTAKE_TOTAL = 12;
 function resetIntake(){ intake = { step:1, checks:{}, triage:null }; }
 function intakeCheckRow(id, label, note){
   var on = !!intake.checks[id];
@@ -1307,66 +1310,152 @@ function intakeCheckRow(id, label, note){
     + '<span class="box">' + icon('checkSm') + '</span>'
     + '<span><span class="ct">' + label + '</span>' + (note ? '<span class="ck-note">' + note + '</span>' : '') + '</span></button>';
 }
-function renderIntakeTool(){
-  if(!intake) resetIntake();
-  var el = toolBody();
-  var s = intake.step, body = '';
+function sayScript(text){
+  return '<div class="script"><span class="script-lbl">Say</span><p>&ldquo;' + text + '&rdquo;</p></div>';
+}
+function leadSrc(){ return '<p class="ref-line">Source: New Lead Script &amp; Flow</p>'; }
+function sopCollect(){ return '<p class="qsub" style="margin-top:18px">From the SOP (§2.1) — tap as you collect it:</p>'; }
+function intakeStepBody(s){
   if(s === 1){
-    body = '<h3>The greeting</h3>'
-      + '<div class="script"><span class="script-lbl">Script — use as written</span><p>&ldquo;QualityPro Pest &amp; Wildlife, this is [Your Name]. How may I help you?&rdquo;</p></div>'
-      + '<p>Answer every inbound call with this exact greeting.</p>'
-      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
-  } else if(s === 2){
-    body = '<h3>Client details</h3><p class="qsub">Collect and log each one. Tap as you get them.</p>'
+    return '<h3>Opening</h3>'
+      + sayScript('Thank you for calling QualityPro. This is [employee name]. How may I help you?')
+      + '<p>Allow the customer to explain the reason for the call.</p>'
+      + sayScript('I&rsquo;m sorry you&rsquo;re dealing with that. I&rsquo;d be happy to help.')
+      + '<p><b>Open New Lead</b> (top of any page next to search bar) to gather information.</p>'
+      + leadSrc();
+  }
+  if(s === 2){
+    return '<h3>1. First and last name</h3>'
+      + sayScript('May I have your first and last name?')
+      + '<p>If already provided:</p>'
+      + sayScript('I have your name as [repeat name]. Is that correct?')
+      + sopCollect()
       + intakeCheckRow('name', 'Full name', 'Verify the exact spelling.')
-      + intakeCheckRow('mobile', 'Primary mobile phone', 'Required for automated text notifications.')
-      + intakeCheckRow('email', 'Email address', 'Required for paperless invoicing and estimates.')
-      + intakeCheckRow('addr', 'Complete property address', '')
-      + intakeCheckRow('source', 'Lead source', 'Create the Lead Source on the profile.')
+      + leadSrc()
       + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
-  } else if(s === 3){
-    body = '<h3>Secondary contact</h3>'
+  }
+  if(s === 3){
+    return '<h3>2. Service address</h3>'
+      + sayScript('What is your address?')
+      + '<p>Enter the address into the Lead record.</p>'
+      + sopCollect()
+      + intakeCheckRow('addr', 'Complete property address', '')
+      + leadSrc()
+      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
+  }
+  if(s === 4){
+    return '<h3>3. Phone number</h3>'
+      + sayScript('What is the best phone number to reach you? Is that a mobile number?')
+      + '<p>Enter the phone number and select the correct telephone type.</p>'
+      + sopCollect()
+      + intakeCheckRow('mobile', 'Primary mobile phone', 'Required for automated text notifications.')
+      + leadSrc()
+      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
+  }
+  if(s === 5){
+    return '<h3>4. Email address</h3>'
+      + sayScript('What is a good email address for estimates and appointment reminders.')
+      + sopCollect()
+      + intakeCheckRow('email', 'Email address', 'Required for paperless invoicing and estimates.')
+      + leadSrc()
+      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
+  }
+  if(s === 6){
+    return '<h3>5. Lead source</h3>'
+      + sayScript('(How did you hear about us?)')
+      + '<p>Select the most accurate source. If an existing client referred them, get the name.</p>'
+      + sopCollect()
+      + intakeCheckRow('source', 'Lead source', 'Create the Lead Source on the profile.')
+      + leadSrc()
+      + '<h3 style="margin-top:22px">Add a secondary contact?</h3>'
       + '<div class="script"><span class="script-lbl">Ask — use as written</span><p>&ldquo;Would you like me to add another person to the account today, such as a spouse, partner, or tenant?&rdquo;</p></div>'
       + '<p><b>Rule:</b> secondary contacts go in the <b>Contacts Tab only</b> — never the Account Tab. This keeps SMS tracking logs separate.</p>'
       + refBlock(2, '2.2', '2.2 Inbound Communication Routing', '§2.2 — Inbound Communication Routing');
-  } else if(s === 4){
-    body = '<h3>The 5 discovery questions</h3><p class="qsub">Ask these on every call. Listen to the client&rsquo;s concerns and log detailed notes as they explain.</p>'
+  }
+  if(s === 7){
+    return '<h3>Gather details</h3>'
+      + sayScript('May I ask you a few questions so I can recommend the right service?')
+      + sayScript('Please tell me a little more about what you&rsquo;ve been seeing or hearing')
+      + '<p>If the customer already described the issue, confirm what they said and ask only the necessary follow-up questions:</p>'
+      + '<ul><li>Where on the property have you noticed the activity?</li>'
+      + '<li>When did you first notice it?</li>'
+      + '<li>How frequently are you seeing or hearing it?</li>'
+      + '<li>Have you tried anything to address the problem?</li>'
+      + '<li>How high is the activity on the house (usually wasp/yellow jacket issue)</li>'
+      + '<li>Is the pest or animal currently inside the living space?</li>'
+      + '<li>Are there any other pest or wildlife concerns we should know about?</li></ul>'
+      + leadSrc()
+      + '<h3 style="margin-top:22px">From the SOP — discovery &amp; property questions</h3>'
+      + '<p class="qsub">Ask these on every call. Listen to the client&rsquo;s concerns and log detailed notes as they explain. Tap each one as you cover it.</p>'
       + intakeCheckRow('q1', '1. What is going on?', '')
       + intakeCheckRow('q2', '2. What pest or animal do you think you have?', '')
       + intakeCheckRow('q3', '3. What time of day do you hear the noise?', '')
       + intakeCheckRow('q4', '4. What specific activity are you seeing?', '')
       + intakeCheckRow('q5', '5. How tall is your home?', 'Decides if a 2-person ladder crew is necessary.')
       + refBlock(2, '2.3', '2.3 Visit Type Triage', '§2.3 — Visit Type Triage');
-  } else if(s === 5){
+  }
+  if(s === 8){
     var tri = [
       ['inspection', 'Inspection Job', 'Initial diagnostic assessment. The inspection fee is credited toward future service valued at $500 or more.'],
       ['direct', 'Direct Service Job', 'Treatment or removal performed right away; the fee is charged at the start of service. If the tech arrives, finds no activity and the client refuses treatment, charge the $195.00 service visit fee.'],
       ['assessment', 'No-Charge Assessment', 'The client is asking about general pests but isn&rsquo;t sure what type of plan they need — we can offer a no-charge assessment.']
     ];
-    body = '<h3>Triage — pick the visit type</h3><p class="qsub">Tap the outcome that fits this call.</p>';
+    var b = '<h3>Recommend &amp; next step</h3>'
+      + sayScript('Based on what you&rsquo;ve described, I recommend [service or inspection]. The next step is to get you an estimate and then get a spot secured on the schedule.')
+      + '<p>If you are just sending an estimate: <b>SAVE &amp; Open Customer</b>, then send estimate.</p>'
+      + '<p>If you are setting up the Job (Inspection or something that does not require an estimate): <b>SAVE &amp; New Job</b>.</p>'
+      + leadSrc()
+      + '<h3 style="margin-top:22px">From the SOP — triage the visit type</h3>'
+      + '<p class="qsub">Tap the outcome that fits this call.</p>';
     tri.forEach(function(t){
-      body += '<button class="opt-btn' + (intake.triage === t[0] ? ' sel' : '') + '" type="button" data-triage="' + t[0] + '"><b>' + t[1] + '</b><span class="ob-s">' + t[2] + '</span></button>';
+      b += '<button class="opt-btn' + (intake.triage === t[0] ? ' sel' : '') + '" type="button" data-triage="' + t[0] + '"><b>' + t[1] + '</b><span class="ob-s">' + t[2] + '</span></button>';
     });
-    body += refBlock(2, '2.3', '2.3 Visit Type Triage', '§2.3 — Visit Type Triage');
-  } else if(s === 6){
-    body = '<h3>Book it</h3>'
+    b += refBlock(2, '2.3', '2.3 Visit Type Triage', '§2.3 — Visit Type Triage');
+    return b;
+  }
+  if(s === 9){
+    return '<h3>9. Check availability</h3>'
+      + '<p>Open the scheduling window in a separate window.</p>'
+      + sayScript('I have availability [first option] or [second option]. Which works better for you?')
+      + '<p><b>From the SOP:</b> Tell the client there is a <b>3-hour arrival window</b>. Time window templates: Morning 8 AM–11 AM &bull; Mid-Day 11 AM–2 PM &bull; Afternoon 2 PM–5 PM (§12).</p>'
+      + leadSrc();
+  }
+  if(s === 10){
+    return '<h3>10. Create and schedule the Job</h3>'
+      + '<p>If job is set up for the same day, select the <b>Notify technician</b> and <b>notify customer (confirmation #1)</b>.</p>'
+      + '<p><b>From the SOP:</b></p>'
       + '<ul><li><b>Create the profile as a LEAD first</b> — every new client starts as a lead (§2.1).</li>'
-      + '<li><b>Check the account balance</b> before booking add-ons or same-day emergencies (§3.3).</li>'
-      + '<li>Tell the client there is a <b>3-hour arrival window</b>. Time window templates: Morning 8 AM–11 AM &bull; Mid-Day 11 AM–2 PM &bull; Afternoon 2 PM–5 PM (§12).</li></ul>'
+      + '<li><b>Check the account balance</b> before booking add-ons or same-day emergencies (§3.3).</li></ul>'
+      + leadSrc()
       + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
-  } else {
-    body = '<h3>Credit card to hold</h3>'
-      + '<div class="script"><span class="script-lbl">Script — use as written</span><p>&ldquo;Finally, we require a credit card to hold the appointment. We will not charge the card until the service is started.&rdquo;</p></div>'
-      + '<p>Enter the cardholder name, complete card number, expiration date and CVC directly into the encrypted payment vault.</p>'
-      + '<p><b>That&rsquo;s the call.</b> The appointment is held once the card is on file.</p>'
+  }
+  if(s === 11){
+    return '<h3>11. Confirm the appointment</h3>'
+      + sayScript('Finally, we require a credit card on file to reserve the appointment. Your card will not be charged until the service has <b>started</b>.')
+      + '<div class="warn-box"><b>Do NOT say &ldquo;until the service is completed.&rdquo;</b></div>'
+      + '<p><b>From the SOP (§2.5):</b> Enter the cardholder name, complete card number, expiration date and CVC directly into the encrypted payment vault.</p>'
+      + sayScript('Perfect. I have you scheduled for [date and time window] at [service address]. Your technician will send you a text message when they are on the way.')
+      + sayScript('Thank you for choosing QualityPro and have a great day!')
+      + leadSrc()
       + refBlock(2, '2.5', '2.5 Credit Card Collection', '§2.5 — Credit Card Collection');
   }
-  var h = '<div class="qcard"><p class="wiz-step">Step ' + s + ' of 7</p>'
-    + '<div class="pbar"><i style="width:' + Math.round(s / 7 * 100) + '%"></i></div>'
-    + body
+  return '<h3>After the call</h3><p class="qsub">Tap each one as you complete it.</p>'
+    + intakeCheckRow('after-tax', 'Make sure Sales tax is recorded.', 'Open locations tab, select address and add bottom middle of screen. Either WC for Westchester, Bronx, CT, PC (Putnam County), RC (Rockland County), YKS (Yonkers), etc.')
+    + intakeCheckRow('after-inv', 'Make Sure Job has an attached Invoice', 'Correct invoice amount for service location, $100 more for counties other than Westchester.')
+    + intakeCheckRow('after-conf', 'Confirm the appointment date, time on the schedule and correct technician.', '')
+    + leadSrc();
+}
+function renderIntakeTool(){
+  if(!intake) resetIntake();
+  var el = toolBody();
+  var s = intake.step;
+  var h = '<div class="qcard"><p class="wiz-step">New Lead Intake Script — Step ' + s + ' of ' + INTAKE_TOTAL + '</p>'
+    + '<p class="qsub">One combined flow: Office SOP §2.1–2.5 with the New Lead Script &amp; Flow.</p>'
+    + '<div class="pbar"><i style="width:' + Math.round(s / INTAKE_TOTAL * 100) + '%"></i></div>'
+    + intakeStepBody(s)
     + '<div class="wiz-nav">'
-    + '<button class="big-btn ghost" type="button" id="in-back"' + (s === 1 ? ' disabled style="opacity:.4"' : '') + '>Back</button>'
-    + '<button class="big-btn" type="button" id="in-next">' + (s === 7 ? 'Finish — back to tools' : 'Next') + '</button>'
+    + '<button class="big-btn ghost" type="button" id="in-back">Back</button>'
+    + '<button class="big-btn" type="button" id="in-next">' + (s === INTAKE_TOTAL ? 'Finish — back to tools' : 'Next') + '</button>'
     + '</div>'
     + startOverBtn()
     + '</div>';
@@ -1383,10 +1472,12 @@ function renderIntakeTool(){
   Array.prototype.forEach.call(el.querySelectorAll('[data-triage]'), function(btn){
     btn.addEventListener('click', function(){ intake.triage = btn.getAttribute('data-triage'); renderIntakeTool(); });
   });
-  var back = document.getElementById('in-back');
-  if(back) back.addEventListener('click', function(){ if(intake.step > 1){ intake.step--; renderIntakeTool(); } });
+  document.getElementById('in-back').addEventListener('click', function(){
+    if(intake.step > 1){ intake.step--; renderIntakeTool(); }
+    else { location.hash = '#/tools'; }
+  });
   document.getElementById('in-next').addEventListener('click', function(){
-    if(intake.step === 7){ resetIntake(); location.hash = '#/tools'; }
+    if(intake.step === INTAKE_TOTAL){ resetIntake(); location.hash = '#/tools'; }
     else { intake.step++; renderIntakeTool(); }
   });
 }
