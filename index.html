@@ -4,12 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<link rel="icon" href="./icon-192.png" />
 <link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon-192.png" />
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 <meta name="theme-color" content="#141416" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Office SOP" />
 <title>Office SOP App — QualityPro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -239,6 +241,8 @@
   .quick-strip.tools svg{color:#fff}
   .ttile{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);
     border-radius:var(--radius);padding:15px 16px;text-align:left;width:100%;color:var(--ink);box-shadow:var(--shadow)}
+  a.ttile{text-decoration:none}
+  a.ttile:hover{border-color:var(--red)}
   .ttile:active{transform:scale(.995)}
   .ttile .tic{flex:none;width:48px;height:48px;border-radius:12px;background:var(--red-soft);color:var(--red);
     display:flex;align-items:center;justify-content:center}
@@ -893,6 +897,11 @@ function bindRestart(el, fn){
 
 function renderTools(){
   var h = '';
+  h += '<a class="ttile" href="https://qualitypropest.github.io/qualitypro-schedule-checker/" target="_blank" rel="noopener">'
+    + '<span class="tic">' + icon('clock') + '</span>'
+    + '<span class="tbody"><span class="tt">Schedule Checker</span>'
+    + '<span class="tb">Live Gorilla Desk schedule — office sign-in required</span></span>'
+    + '<span class="refchip">Live &#8599;</span></a>';
   TOOLS.forEach(function(t){
     h += '<button class="ttile" type="button" data-tool="' + t.id + '">'
       + '<span class="tic">' + icon(t.icon) + '</span>'
@@ -1502,10 +1511,11 @@ var TOOL_RENDER = {
 renderTiles();
 route();
 </script>
-
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js').catch(function(){}); });
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  });
 }
 </script>
 </body>
