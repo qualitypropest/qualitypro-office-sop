@@ -356,7 +356,7 @@
     <button class="quick-strip tools" id="tools-open" type="button">
       <span>
         <span class="qs-t">Tools &amp; Wizards</span>
-        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; quote math &bull; plan finder &bull; intake call flow &bull; date checker</span>
+        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; plan finder &bull; intake call flow &bull; date checker</span>
       </span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
     </button>
@@ -851,7 +851,6 @@ var TOOLS = [
   { id:'tick',    name:'Tick & Mosquito Price',    sub:'Enter the lawn size — get the Tick, Mosquito and Botanical prices for the tier.', ref:'§8.7',      icon:'calc' },
   { id:'termite', name:'Termite Calculator',       sub:'Install, spot, trench & rod, slab — plus takeover, maintenance and bundle splits.', ref:'§8.6', icon:'calc' },
   { id:'bee',     name:'Bee / Wasp Booking Wizard', sub:'Ask the five questions, tap the answers — Standard $345 or Advanced $425.', ref:'§3.7', icon:'wand' },
-  { id:'quote',   name:'Quote Math Helper',        sub:'Discounts, the $195 inspection credit, travel surcharge and tax — the SOP way.', ref:'§6.7 + §3.6', icon:'calc' },
   { id:'plan',    name:'Plan Finder',              sub:'Tap the pests the client has — get the lowest plan that covers them all.', ref:'§8.2–8.4', icon:'wand' },
   { id:'intake',  name:'New Lead Intake Script',   sub:'One combined flow for a new-lead call — the New Lead Script word for word, with the SOP intake steps woven in.', ref:'§2.1–2.5', icon:'phone' },
   { id:'date',    name:'Scheduling Date Checker',  sub:'Blackout dates, trapping start days, the Tue–Fri 8–10 AM rule and time-window templates.', ref:'§12 + §9.1', icon:'clock' }
@@ -1163,84 +1162,6 @@ function renderBeeResult(el){
   el.innerHTML = h;
   bindGoto(el);
   bindRestart(el, function(){ resetBee(); renderBeeTool(); });
-}
-
-/* ---------- TOOL 4: Quote Math Helper (§6.7 + §3.6) ---------- */
-var QUOTE_DISCOUNTS = [
-  { name:'No discount', pct:0 },
-  { name:'15% — MOS, military & veterans (lifetime)', pct:15 },
-  { name:'10% — Senior citizens (lifetime)', pct:10 },
-  { name:'10% — New client (first service only)', pct:10 },
-  { name:'10% — Chappaqua Moms referral (first service only)', pct:10 }
-];
-var QUOTE_REGIONS = [
-  { name:'Westchester County', tax:8.38,  sur:0 },
-  { name:'Yonkers',            tax:8.875, sur:0 },
-  { name:'Bronx',              tax:8.875, sur:100 },
-  { name:'Connecticut',        tax:6.35,  sur:100 },
-  { name:'Putnam County',      tax:8.365, sur:100 },
-  { name:'Rockland County',    tax:8.375, sur:100 }
-];
-var quoteInsp = false;
-function renderQuoteTool(){
-  var el = toolBody();
-  var dOpts = '', rOpts = '';
-  QUOTE_DISCOUNTS.forEach(function(d, i){ dOpts += '<option value="' + i + '">' + d.name + '</option>'; });
-  QUOTE_REGIONS.forEach(function(r, i){ rOpts += '<option value="' + i + '">' + r.name + ' — ' + r.tax + '% tax' + (r.sur ? ', +$100 travel surcharge' : ', no surcharge') + '</option>'; });
-  el.innerHTML = '<div class="qcard"><h3>Quote details</h3>'
-    + '<label class="fld"><span>Service subtotal ($)</span><input id="q-sub" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 850" /></label>'
-    + '<span style="display:block;font-weight:700;font-size:14.5px;margin-bottom:6px">Client already paid the $195 inspection fee?</span>'
-    + '<div class="seg"><button class="opt-btn" type="button" id="q-insp-no"><b>No</b></button><button class="opt-btn" type="button" id="q-insp-yes"><b>Yes — $195 paid</b></button></div>'
-    + '<label class="fld"><span>Discount</span><select id="q-disc">' + dOpts + '</select></label>'
-    + '<label class="fld"><span>Region</span><select id="q-reg">' + rOpts + '</select></label>'
-    + '<button class="big-btn" type="button" id="q-calc">Do the math</button>'
-    + '<div id="q-out"></div>'
-    + startOverBtn()
-    + '<p class="ref-line">§6.7 — Discounts &amp; Inspection Credit &bull; §3.6 — Regional Tax &amp; Surcharges</p>'
-    + srcLink(6, '6.7', '6.7 Master Discount Tiers') + srcLink(3, '3.6', '3.6 Regional Service Areas')
-    + '</div>';
-  bindGoto(el);
-  bindRestart(el, function(){ quoteInsp = false; renderQuoteTool(); });
-  function paintInsp(){
-    document.getElementById('q-insp-yes').classList.toggle('sel', quoteInsp);
-    document.getElementById('q-insp-no').classList.toggle('sel', !quoteInsp);
-  }
-  paintInsp();
-  document.getElementById('q-insp-yes').addEventListener('click', function(){ quoteInsp = true; paintInsp(); });
-  document.getElementById('q-insp-no').addEventListener('click', function(){ quoteInsp = false; paintInsp(); });
-  document.getElementById('q-calc').addEventListener('click', quoteCalc);
-}
-function quoteCalc(){
-  var out = document.getElementById('q-out');
-  var sub = numVal('q-sub');
-  if(sub === null || sub < 0){ out.innerHTML = '<div class="warn-box">Enter the service subtotal to run the quote math.</div>'; return; }
-  var disc = QUOTE_DISCOUNTS[parseInt(document.getElementById('q-disc').value, 10)];
-  var reg = QUOTE_REGIONS[parseInt(document.getElementById('q-reg').value, 10)];
-  var discAmt = Math.round(sub * disc.pct) / 100;
-  var creditEligible = quoteInsp && sub >= 500;
-  var estCredit = 0, acctCredit = 0;
-  if(creditEligible){ if(disc.pct > 0) acctCredit = 195; else estCredit = 195; }
-  var taxable = Math.max(0, sub + reg.sur - discAmt - estCredit);
-  var tax = Math.round(taxable * reg.tax) / 100;
-  var total = Math.round((taxable + tax) * 100) / 100;
-  var h = '<div class="result-box"><p class="ref-line" style="margin:0 0 4px">Read it to the client, line by line</p><div class="lines">'
-    + '<div class="ln"><span class="ll">Service subtotal</span><span class="lv">' + money(sub) + '</span></div>'
-    + '<div class="ln"><span class="ll">Travel surcharge (' + reg.name + ')</span><span class="lv">' + (reg.sur ? '+' + money(reg.sur) : money(0)) + '</span></div>';
-  if(disc.pct > 0) h += '<div class="ln"><span class="ll">Discount — ' + disc.name.split(' — ')[1] + '</span><span class="lv">−' + money(discAmt).replace('−', '') + '</span></div>';
-  if(estCredit) h += '<div class="ln"><span class="ll">Inspection credit (on this estimate)</span><span class="lv">−' + money(195).replace('−', '') + '</span></div>';
-  if(acctCredit) h += '<div class="ln"><span class="ll">Inspection credit</span><span class="lv">$195.00 on the account</span></div>';
-  h += '<div class="ln"><span class="ll">Taxable amount</span><span class="lv">' + money(taxable) + '</span></div>'
-    + '<div class="ln"><span class="ll">Tax (' + reg.name + ' ' + reg.tax + '%)</span><span class="lv">' + money(tax) + '</span></div>'
-    + '<div class="ln total"><span class="ll">TOTAL</span><span class="lv">' + money(total) + '</span></div>'
-    + '</div>';
-  if(acctCredit){
-    h += '<div class="warn-box" style="margin-top:14px"><b>Inspection credit:</b> $195.00 goes on the account as a <b>Credit on the Account</b> — do NOT put the $195 on the estimate, because a percentage discount also applies.</div>'
-      + '<div class="script" style="margin-top:12px"><span class="script-lbl">Note to put on the estimate</span><p>Final invoice will include the $195 inspection credit.</p></div>';
-  }
-  if(estCredit) h += '<p style="margin:12px 0 0">Inspection credit applied as a flat <b>$195.00 discount on the estimate</b> (no percentage discount on this quote).</p>';
-  if(quoteInsp && sub < 500) h += '<div class="warn-box"><b>No inspection credit:</b> the $195 is credited only when the approved service is $500 or more. This service is ' + money(sub) + '.</div>';
-  h += '<p style="margin:12px 0 0;color:var(--ink-2);font-size:14.5px">Rules: discounts apply to service lines only — never to the inspection fee. Only the $195 base is ever credited, never the $16.33 tax on it.</p>';
-  out.innerHTML = h + '</div>';
 }
 
 /* ---------- TOOL 5: Plan Finder (§8.2–8.4) ---------- */
@@ -1573,7 +1494,6 @@ var TOOL_RENDER = {
   tick: renderTickTool,
   termite: function(){ renderTermiteTool(); },
   bee: function(){ resetBee(); renderBeeTool(); },
-  quote: renderQuoteTool,
   plan: renderPlanTool,
   intake: function(){ resetIntake(); renderIntakeTool(); },
   date: renderDateTool
