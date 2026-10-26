@@ -360,7 +360,7 @@
     <button class="quick-strip tools" id="tools-open" type="button">
       <span>
         <span class="qs-t">Tools &amp; Wizards</span>
-        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; plan finder &bull; intake call flow &bull; date checker</span>
+        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; plan finder &bull; intake call flow</span>
       </span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
     </button>
@@ -856,8 +856,7 @@ var TOOLS = [
   { id:'termite', name:'Termite Calculator',       sub:'Install, spot, trench & rod, slab — plus takeover, maintenance and bundle splits.', ref:'§8.6', icon:'calc' },
   { id:'bee',     name:'Bee / Wasp Booking Wizard', sub:'Ask the five questions, tap the answers — Standard $345 or Advanced $425.', ref:'§3.7', icon:'wand' },
   { id:'plan',    name:'Plan Finder',              sub:'Tap the pests the client has — get the lowest plan that covers them all.', ref:'§8.2–8.4', icon:'wand' },
-  { id:'intake',  name:'New Lead Intake Script',   sub:'One combined flow for a new-lead call — the New Lead Script word for word, with the SOP intake steps woven in.', ref:'§2.1–2.5', icon:'phone' },
-  { id:'date',    name:'Scheduling Date Checker',  sub:'Blackout dates, trapping start days, the Tue–Fri 8–10 AM rule and time-window templates.', ref:'§12 + §9.1', icon:'clock' }
+  { id:'intake',  name:'New Lead Intake Script',   sub:'One combined flow for a new-lead call — the New Lead Script word for word, with the SOP intake steps woven in.', ref:'§2.1–2.5', icon:'phone' }
 ];
 var currentTool = null;
 
@@ -1408,104 +1407,13 @@ function renderIntakeTool(){
   });
 }
 
-/* ---------- TOOL 7: Scheduling Date Checker (§12 + §8.8.1 + §9.1) ---------- */
-var DC_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-var DC_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-function renderDateTool(){
-  var el = toolBody();
-  el.innerHTML = '<div class="qcard"><h3>Check a date &amp; time</h3>'
-    + '<label class="fld"><span>Date</span><input id="dc-date" type="date" /></label>'
-    + '<label class="fld"><span>Start time</span><input id="dc-time" type="time" /></label>'
-    + '<label class="fld"><span>Job type</span><select id="dc-type">'
-    + '<option value="general">General service</option><option value="inspection">Inspection</option>'
-    + '<option value="trapping">Trapping</option><option value="exclusion">Exclusion</option>'
-    + '<option value="bat">Bat work</option><option value="other">Other</option></select></label>'
-    + '<label class="fld" id="dc-pkg-wrap" style="display:none"><span>Trapping package</span><select id="dc-pkg">'
-    + '<option value="2">Trapping (2-Visit)</option><option value="3">Trapping (3-Visit)</option><option value="5">Trapping (5-Visit)</option></select></label>'
-    + '<button class="big-btn" type="button" id="dc-check">Check it</button>'
-    + '<div id="dc-out"></div>'
-    + startOverBtn()
-    + '<p class="ref-line">§12 — Scheduling SOP &bull; §8.8.1 — Trapping Services &bull; §9.1 — Bat Standards</p>'
-    + srcLink(12, '1', 'Chapter 12 — Scheduling SOP') + srcLink(9, '9.1', '9.1 Bat Standards') + srcLink(8, '8.8', '8.8 Wildlife & Trapping')
-    + '</div>';
-  bindGoto(el);
-  bindRestart(el, renderDateTool);
-  document.getElementById('dc-type').addEventListener('change', function(){
-    document.getElementById('dc-pkg-wrap').style.display = this.value === 'trapping' ? 'block' : 'none';
-  });
-  document.getElementById('dc-check').addEventListener('click', dateCheck);
-}
-function flagRow(kind, title, text){
-  var sym = kind === 'ok' ? '✓' : (kind === 'warn' ? '!' : 'i');
-  return '<div class="flag ' + kind + '"><span class="fi">' + sym + '</span><span class="ft"><b>' + title + '</b>' + text + '</span></div>';
-}
-function dateCheck(){
-  var out = document.getElementById('dc-out');
-  var dv = document.getElementById('dc-date').value;
-  var tv = document.getElementById('dc-time').value;
-  if(!dv || !tv){ out.innerHTML = '<div class="warn-box">Pick a date and a start time, then tap Check it.</div>'; return; }
-  var p = dv.split('-');
-  var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
-  var wd = d.getDay();
-  var md = d.getMonth() * 100 + d.getDate();
-  var tp = tv.split(':');
-  var mins = parseInt(tp[0], 10) * 60 + parseInt(tp[1], 10);
-  var type = document.getElementById('dc-type').value;
-  var typeName = document.getElementById('dc-type').options[document.getElementById('dc-type').selectedIndex].text;
-  var h = '<div class="result-box"><p class="ref-line" style="margin:0 0 6px">' + DC_DAYS[wd] + ', ' + DC_MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' — ' + typeName + '</p>';
-  // Tue–Fri 8–10 AM rule (§12)
-  var inBlock = wd >= 2 && wd <= 5 && mins >= 480 && mins < 600;
-  if(inBlock && type !== 'trapping') h += flagRow('warn', 'Blocked window — Tue–Fri 8:00–10:00 AM.', 'Do not schedule anything Tuesday–Friday between 8–10 AM unless it is a Trapping Service (§12). Move this visit or pick a different time.');
-  else if(inBlock) h += flagRow('ok', 'Tue–Fri 8:00–10:00 AM — OK for Trapping.', 'Trapping Services are the one exception to the Tue–Fri 8–10 AM scheduling block (§12).');
-  else h += flagRow('ok', 'Outside the restricted window.', 'The Tue–Fri 8:00–10:00 AM block does not apply to this date and time (§12).');
-  // Bat blackout (§9.1)
-  var blackout = md >= 501 && md <= 701;
-  if(blackout && (type === 'bat' || type === 'exclusion')){
-    h += flagRow('warn', 'BAT BLACKOUT — Jun 1 to Aug 1: NO bat exclusion.', 'Females give birth to flightless pups that cannot leave the structure; exclusion in this window is illegal &amp; inhumane (§9.1). Do not book this job in the blackout.');
-  } else if(blackout){
-    h += flagRow('info', 'Inside the bat blackout (Jun 1 – Aug 1).', 'The blackout only blocks Bat work and Exclusion jobs — it does not affect this job type (§9.1).');
-  } else if(type === 'bat' || type === 'exclusion'){
-    h += flagRow('ok', 'Outside the bat blackout.', 'Bat exclusion blackout runs Jun 1 – Aug 1 (§9.1).');
-  }
-  if(type === 'bat' && md >= 301 && md <= 431){
-    h += flagRow('info', 'Spring BCV rule (Apr 1 – May 31).', 'BCV removal needs temperatures of 45°F or higher for 3 consecutive nights, to make sure the bats have left (§9.1).');
-  }
-  // Trapping start days (§8.8.1)
-  if(type === 'trapping'){
-    var pkg = document.getElementById('dc-pkg').value;
-    if(pkg === '2'){
-      if(wd === 6) h += flagRow('warn', '2-Visit trapping cannot start on a Saturday.', 'Trapping (2-Visit) can start any day except Saturday (§8.8.1).');
-      else h += flagRow('ok', '2-Visit trapping can start on a ' + DC_DAYS[wd] + '.', 'Trapping (2-Visit) can start any day except Saturday (§8.8.1).');
-    } else if(pkg === '3'){
-      if(wd === 5) h += flagRow('warn', '3-Visit trapping cannot start on a Friday.', 'Trapping (3-Visit) can start any day except Thursday/Friday (§8.8.1).');
-      else if(wd === 4) h += flagRow('warn', '3-Visit trapping starting Thursday — check coverage first.', 'Thursday is OK only if Saturday coverage is available (§8.8.1).');
-      else h += flagRow('ok', '3-Visit trapping can start on a ' + DC_DAYS[wd] + '.', 'Trapping (3-Visit) can start any day except Thursday/Friday (§8.8.1).');
-    } else {
-      if(wd === 1) h += flagRow('ok', '5-Visit trapping can start on a Monday.', 'Trapping (5-Visit) starts Monday and Tuesday only (§8.8.1).');
-      else if(wd === 2) h += flagRow('info', '5-Visit trapping starting Tuesday — check Saturday coverage.', 'A Tuesday start must have coverage for Saturday, or the cages will be closed on Friday (§8.8.1).');
-      else h += flagRow('warn', '5-Visit trapping cannot start on a ' + DC_DAYS[wd] + '.', 'Trapping (5-Visit) can start on Monday and Tuesday only (§8.8.1).');
-    }
-    if(wd === 4 || wd === 5){
-      h += flagRow('info', 'Weekend trapping note.', 'If trapping starts Thursday or Friday and runs through the weekend, traps close on Friday or Saturday and re-open Monday — and Monday does not count as a day (§8.8.1).');
-    }
-  }
-  // Time window template (§12)
-  var win = null;
-  if(mins >= 480 && mins < 660) win = 'Morning — 8 AM–11 AM';
-  else if(mins >= 660 && mins < 840) win = 'Mid-Day — 11 AM–2 PM';
-  else if(mins >= 840 && mins < 1020) win = 'Afternoon — 2 PM–5 PM';
-  if(win) h += flagRow('info', 'Time window template: ' + win + '.', 'Add this Time Window to the job, and tell the client there is a 3-hour arrival window (§12).');
-  else h += flagRow('info', 'Outside the standard time-window templates.', 'Templates are Morning 8 AM–11 AM, Mid-Day 11 AM–2 PM and Afternoon 2 PM–5 PM — create a custom time window instead, and tell the client there is a 3-hour arrival window (§12).');
-  out.innerHTML = h + '</div>';
-}
 
 var TOOL_RENDER = {
   tick: renderTickTool,
   termite: function(){ renderTermiteTool(); },
   bee: function(){ resetBee(); renderBeeTool(); },
   plan: renderPlanTool,
-  intake: function(){ resetIntake(); renderIntakeTool(); },
-  date: renderDateTool
+  intake: function(){ resetIntake(); renderIntakeTool(); }
 };
 
 renderTiles();
