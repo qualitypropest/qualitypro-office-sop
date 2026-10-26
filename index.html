@@ -299,6 +299,13 @@
   .grp-lbl{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:14px 0 8px}
   .rodent-line{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2);font-size:15.5px;margin-top:14px}
   .check-row .ck-note{display:block;font-size:13.8px;color:var(--ink-2);font-weight:400;margin-top:1px}
+
+  /* ---------- daily to do — one uniform list style ---------- */
+  .daily-card .check-row .ct{font-family:inherit;font-size:16.5px;font-weight:600;line-height:1.4}
+  .daily-reader .daily-list li{font-family:inherit;font-size:16.5px;font-weight:400;line-height:1.5}
+  .daily-reader .daily-list ul{margin:5px 0 3px;padding-left:20px}
+  .daily-reader .daily-list ul li{font-size:16.5px}
+  .daily-reader .daily-list ul ul{margin:5px 0 3px;padding-left:20px}
   .steps-list{margin:0 0 6px;padding-left:22px}
   .steps-list li{margin-bottom:8px;font-size:16px}
 </style>
@@ -503,6 +510,68 @@ function blocksHTML(blocks){
   return h;
 }
 
+/* ---------- daily to do list (ch. 11) — uniform rendering ----------
+   Presentation only: the stored text is never changed. Main items arrive
+   from the source document in ALL CAPS; they are case-normalized to match
+   the Quick Reference checklist style, and the detail bullets that follow
+   a main item nest under it (a detail ending in "-" or ":" nests the
+   bullets that follow it). Every item renders in the one list style. */
+function isDailyMain(t){
+  var letters = t.replace(/[^A-Za-z]/g, '');
+  if(letters.length < 4) return false;
+  var up = letters.replace(/[^A-Z]/g, '').length;
+  return up / letters.length > 0.8;
+}
+function titleCaseCaps(t){
+  var ACR = {SMS:1, GD:1, DEC:1, NWCO:1, PRL:1};
+  return t.replace(/[A-Za-z][A-Za-z'’]*/g, function(w){
+    if(w.length > 1 && w === w.toUpperCase() && ACR[w]) return w;
+    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  });
+}
+function dailyBlocksHTML(blocks){
+  var mains = [], extra = '', cur = null, lead = null;
+  blocks.forEach(function(b){
+    if(b.k !== 'li'){ extra += blocksHTML([b]); return; }
+    var t = b.t || '';
+    if(isDailyMain(t)){
+      cur = { t: titleCaseCaps(t), subs: [] }; mains.push(cur); lead = null;
+    } else if(cur){
+      if(/[-:]\s*$/.test(t) && !lead){
+        lead = { t: t, subs: [] }; cur.subs.push(lead);
+      } else if(lead){
+        lead.subs.push(t);
+      } else {
+        cur.subs.push(t);
+      }
+    } else {
+      cur = { t: t, subs: [] }; mains.push(cur); lead = null;
+    }
+  });
+  var h = extra + '<ul class="daily-list">';
+  mains.forEach(function(m){
+    h += '<li>' + esc(m.t);
+    if(m.subs.length){
+      h += '<ul>';
+      m.subs.forEach(function(s2){
+        if(typeof s2 === 'string'){ h += '<li>' + esc(s2) + '</li>'; }
+        else {
+          h += '<li>' + esc(s2.t);
+          if(s2.subs.length){
+            h += '<ul>';
+            s2.subs.forEach(function(s3){ h += '<li>' + esc(s3) + '</li>'; });
+            h += '</ul>';
+          }
+          h += '</li>';
+        }
+      });
+      h += '</ul>';
+    }
+    h += '</li>';
+  });
+  return h + '</ul>';
+}
+
 /* ---------- views ---------- */
 var views = ['home','chapter','section','search','quick','tools','tool'];
 function show(name){
@@ -551,11 +620,14 @@ function renderSection(n, idx){
   var s = ch.sections[idx]; if(!s){ location.hash = '#/c/'+n; return; }
   document.getElementById('section-crumb-t').textContent = 'Chapter '+ch.num+': '+ch.title;
   document.getElementById('section-crumb').onclick = function(){ location.hash = '#/c/'+n; };
-  var html = '<div class="chap-line">Chapter '+ch.num+' &bull; '+esc(ch.title)+'</div><h1>'+esc(s.title)+'</h1>' + blocksHTML(s.blocks);
+  var isDaily = ch.num === 11;
+  var html = '<div class="chap-line">Chapter '+ch.num+' &bull; '+esc(ch.title)+'</div><h1>'+esc(s.title)+'</h1>' + (isDaily ? dailyBlocksHTML(s.blocks) : blocksHTML(s.blocks));
   if(state.highlight){
     html = highlightEscaped(html, termsOf(state.highlight));
   }
-  document.getElementById('reader').innerHTML = html;
+  var readerEl = document.getElementById('reader');
+  readerEl.innerHTML = html;
+  readerEl.classList.toggle('daily-reader', isDaily);
   var pn = '';
   if(idx > 0){
     pn += '<button type="button" id="pn-prev">'+icon('chevR').replace('m9 18 6-6-6-6','m15 18-6-6 6-6')+'<span class="pn-t"><span class="pn-l">Previous</span>'+esc(ch.sections[idx-1].title)+'</span></button>';
@@ -641,7 +713,7 @@ function renderQuick(){
   var q = DATA.quick, h = '';
   // Daily checklist
   var doneCount = q.daily.filter(function(_, i){ return doneSet[i]; }).length;
-  h += '<div class="qcard"><h3>Daily To Do List</h3>'
+  h += '<div class="qcard daily-card"><h3>Daily To Do List</h3>'
     + '<div class="progress-line"><span class="pl-t">'+doneCount+' of '+q.daily.length+' done</span>'
     + '<button class="reset-btn" type="button" id="daily-reset">Start over</button></div>'
     + '<div class="pbar"><i style="width:'+(q.daily.length ? Math.round(doneCount/q.daily.length*100) : 0)+'%"></i></div>';
