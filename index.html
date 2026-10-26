@@ -230,6 +230,77 @@
   .dec-group li{margin-bottom:3px}
   footer.site{max-width:1080px;margin:0 auto;padding:0 16px 34px;color:var(--ink-3);font-size:13.5px;text-align:center}
   footer.site b{color:var(--ink-2)}
+
+  /* ---------- tools & wizards ---------- */
+  .quick-strip.tools{background:var(--red);border-bottom:3px solid var(--red-dark)}
+  .quick-strip.tools .qs-s{color:#f3cfd0}
+  .quick-strip.tools svg{color:#fff}
+  .ttile{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:15px 16px;text-align:left;width:100%;color:var(--ink);box-shadow:var(--shadow)}
+  .ttile:active{transform:scale(.995)}
+  .ttile .tic{flex:none;width:48px;height:48px;border-radius:12px;background:var(--red-soft);color:var(--red);
+    display:flex;align-items:center;justify-content:center}
+  .ttile .tic svg{width:25px;height:25px}
+  .ttile .tbody{min-width:0;flex:1}
+  .ttile .tt{font-weight:700;font-size:17px;line-height:1.25;display:block}
+  .ttile .tb{font-size:13.8px;color:var(--ink-2);margin-top:2px;line-height:1.4;display:block}
+  .refchip{flex:none;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--red);
+    background:var(--red-soft);padding:4px 9px;border-radius:99px;white-space:nowrap}
+  .fld{display:block;margin-bottom:14px}
+  .fld>span{display:block;font-weight:700;font-size:14.5px;margin-bottom:6px}
+  .fld input,.fld select{width:100%;font:inherit;font-size:19px;padding:13px 14px;border:1.5px solid var(--line);
+    border-radius:12px;background:var(--surface);color:var(--ink)}
+  .fld input:focus,.fld select:focus{outline:3px solid color-mix(in srgb,var(--red) 35%, transparent);outline-offset:1px;border-color:var(--red)}
+  .big-btn{display:block;width:100%;background:var(--red);color:#fff;border:0;border-radius:12px;
+    padding:15px;font-weight:700;font-size:17px;text-align:center}
+  .big-btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+  .opt-btn{display:block;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--line);
+    border-radius:12px;padding:14px 16px;margin-bottom:9px;color:var(--ink);min-height:56px}
+  .opt-btn b{display:block;font-size:17px;line-height:1.3}
+  .opt-btn .ob-s{display:block;font-size:14px;color:var(--ink-2);margin-top:2px;line-height:1.45}
+  .opt-btn.sel{border-color:var(--red);background:var(--red-soft)}
+  .seg{display:flex;gap:8px;margin-bottom:14px}
+  .seg .opt-btn{flex:1;text-align:center;margin-bottom:0}
+  .seg .opt-btn b{display:block}
+  .ask-list{margin:0 0 16px;padding-left:22px}
+  .ask-list li{margin-bottom:9px;font-size:16.5px}
+  .wiz-step{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin:0 0 6px}
+  .wiz-nav{display:flex;gap:8px;margin-top:14px}
+  .wiz-nav .big-btn{flex:1}
+  .result-box{border:2px solid var(--red);border-radius:12px;padding:16px;margin-top:14px;background:var(--surface)}
+  .price-big{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:46px;line-height:1;color:var(--red)}
+  .price-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+  .price-row:first-of-type{border-top:0}
+  .price-row .pr-l{font-weight:600;font-size:16px}
+  .price-row .pr-v{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:31px;color:var(--red);white-space:nowrap}
+  .ref-line{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:14px 0 0}
+  .lines{margin-top:4px}
+  .lines .ln{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:15.8px}
+  .lines .ln:first-child{border-top:0}
+  .lines .ln .ll{min-width:0}
+  .lines .ln .lv{font-weight:700;white-space:nowrap}
+  .lines .ln.total{border-top:2px solid var(--ink);margin-top:4px}
+  .lines .ln.total .ll{font-weight:700}
+  .lines .ln.total .lv{color:var(--red);font-size:23px}
+  .warn-box{border:1.5px solid #c9901d;background:#fdf6df;color:#5f450a;border-radius:12px;padding:13px 15px;margin-top:12px;font-size:15.5px}
+  @media (prefers-color-scheme: dark){ .warn-box{border-color:#8a6d1f;background:#2e2716;color:#eed9a0} }
+  .flag{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--line);align-items:flex-start;font-size:15.8px}
+  .flag:first-of-type{border-top:0}
+  .flag .fi{flex:none;width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;margin-top:1px}
+  .flag.ok .fi{background:var(--ok)}
+  .flag.warn .fi{background:var(--red)}
+  .flag.info .fi{background:var(--ink-3)}
+  .flag .ft{min-width:0}
+  .flag .ft b{display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .chip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;
+    padding:10px 15px;font-size:15px;font-weight:600;min-height:44px}
+  .chip.on{background:var(--red);border-color:var(--red);color:#fff}
+  .grp-lbl{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:14px 0 8px}
+  .rodent-line{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2);font-size:15.5px;margin-top:14px}
+  .check-row .ck-note{display:block;font-size:13.8px;color:var(--ink-2);font-weight:400;margin-top:1px}
+  .steps-list{margin:0 0 6px;padding-left:22px}
+  .steps-list li{margin-bottom:8px;font-size:16px}
 </style>
 </head>
 <body>
@@ -271,6 +342,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
     </button>
 
+    <button class="quick-strip tools" id="tools-open" type="button">
+      <span>
+        <span class="qs-t">Tools &amp; Wizards</span>
+        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; quote math &bull; plan finder &bull; intake call flow &bull; date checker</span>
+      </span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+    </button>
+
     <h2 class="home-h">Chapters</h2>
     <div class="tiles" id="tiles"></div>
   </section>
@@ -305,6 +384,22 @@
     <p class="page-sub">The pages the office reaches for most — pulled word-for-word from the SOP chapters. The Daily To Do checks are just for this visit; they reset when you leave.</p>
     <div id="quick-body"></div>
   </section>
+
+  <!-- TOOLS HOME -->
+  <section class="view" id="view-tools">
+    <button class="crumb" data-nav="home" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>All chapters</button>
+    <h2 class="page-h">Tools &amp; Wizards</h2>
+    <p class="page-sub">Built for mid-call use: big buttons, one step at a time, and every answer shows the SOP section it came from. Nothing you enter here is saved or sent — it clears when the page closes.</p>
+    <div class="tiles" id="tool-tiles"></div>
+  </section>
+
+  <!-- SINGLE TOOL -->
+  <section class="view" id="view-tool">
+    <button class="crumb" id="tool-crumb" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Tools &amp; Wizards</button>
+    <h2 class="page-h" id="tool-title"></h2>
+    <p class="page-sub" id="tool-sub"></p>
+    <div id="tool-body"></div>
+  </section>
 </main>
 
 <footer class="site">
@@ -328,6 +423,8 @@ var ICONS = {
   chart:'<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/>',
   check:'<path d="M21 6H3"/><path d="M17 12H7"/><path d="m9 16 2 2 4-4"/><path d="M21 18H3"/>',
   clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+  wand:'<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/>',
   chevR:'<path d="m9 18 6-6-6-6"/>',
   checkSm:'<path d="M20 6 9 17l-5-5"/>'
 };
@@ -407,7 +504,7 @@ function blocksHTML(blocks){
 }
 
 /* ---------- views ---------- */
-var views = ['home','chapter','section','search','quick'];
+var views = ['home','chapter','section','search','quick','tools','tool'];
 function show(name){
   views.forEach(function(v){ document.getElementById('view-'+v).classList.toggle('active', v===name); });
   window.scrollTo(0,0);
@@ -646,6 +743,10 @@ function route(){
     renderChapter(parseInt(parts[1], 10));
   } else if(parts[0] === 'quick'){
     renderQuick();
+  } else if(parts[0] === 'tools'){
+    renderTools();
+  } else if(parts[0] === 'tool' && parts[1]){
+    openTool(parts[1]);
   } else if(parts[0] === 'search' && parts[1]){
     runSearch(decodeURIComponent(parts.slice(1).join('/')));
   } else {
@@ -661,9 +762,663 @@ document.getElementById('search-form').addEventListener('submit', function(e){
   if(q) location.hash = '#/search/' + encodeURIComponent(q);
 });
 document.getElementById('quick-open').addEventListener('click', function(){ location.hash = '#/quick'; });
+document.getElementById('tools-open').addEventListener('click', function(){ location.hash = '#/tools'; });
+document.getElementById('tool-crumb').addEventListener('click', function(){ location.hash = '#/tools'; });
 Array.prototype.forEach.call(document.querySelectorAll('[data-nav="home"]'), function(btn){
   btn.addEventListener('click', function(){ location.hash = '#/'; });
 });
+
+/* ================= TOOLS & WIZARDS ================= */
+/* Session-only: all tool state lives in memory and clears when the page closes. */
+
+var TOOLS = [
+  { id:'tick',    name:'Tick & Mosquito Price',    sub:'Enter the lawn size — get the Tick, Mosquito and Botanical prices for the tier.', ref:'§8.7',      icon:'calc' },
+  { id:'termite', name:'Termite Calculator',       sub:'Install, spot, trench & rod, slab — plus takeover, maintenance and bundle splits.', ref:'§8.6', icon:'calc' },
+  { id:'bee',     name:'Bee / Wasp Booking Wizard', sub:'Ask the five questions, tap the answers — Standard $345 or Advanced $425.', ref:'§3.7', icon:'wand' },
+  { id:'quote',   name:'Quote Math Helper',        sub:'Discounts, the $195 inspection credit, travel surcharge and tax — the SOP way.', ref:'§6.7 + §3.6', icon:'calc' },
+  { id:'plan',    name:'Plan Finder',              sub:'Tap the pests the client has — get the lowest plan that covers them all.', ref:'§8.2–8.4', icon:'wand' },
+  { id:'intake',  name:'Intake Call Wizard',       sub:'A new-client call, step by step: greeting, details, discovery, triage, booking, credit card.', ref:'§2.1–2.5', icon:'phone' },
+  { id:'date',    name:'Scheduling Date Checker',  sub:'Blackout dates, trapping start days, the Tue–Fri 8–10 AM rule and time-window templates.', ref:'§12 + §9.1', icon:'clock' }
+];
+var currentTool = null;
+
+function money(n){
+  var neg = n < 0, v = Math.abs(Math.round(n * 100) / 100);
+  var parts = v.toFixed(2).split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (neg ? '−' : '') + '$' + parts.join('.');
+}
+function numVal(id){
+  var el = document.getElementById(id);
+  if(!el) return null;
+  var v = parseFloat(String(el.value).replace(/[^0-9.]/g, ''));
+  return isNaN(v) ? null : v;
+}
+function toolBody(){ return document.getElementById('tool-body'); }
+function bindGoto(el){
+  Array.prototype.forEach.call(el.querySelectorAll('[data-goto]'), function(btn){
+    btn.addEventListener('click', function(){
+      var p = btn.getAttribute('data-goto').split('/');
+      state.highlight = '';
+      location.hash = '#/c/' + p[0] + '/s/' + p[1];
+    });
+  });
+}
+function refBlock(chNum, prefix, label, refText){
+  return '<p class="ref-line">' + refText + '</p>' + srcLink(chNum, prefix, label);
+}
+function startOverBtn(){
+  return '<button class="big-btn ghost" type="button" data-restart style="margin-top:14px">Start over</button>';
+}
+function bindRestart(el, fn){
+  Array.prototype.forEach.call(el.querySelectorAll('[data-restart]'), function(b){
+    b.addEventListener('click', fn);
+  });
+}
+
+function renderTools(){
+  var h = '';
+  TOOLS.forEach(function(t){
+    h += '<button class="ttile" type="button" data-tool="' + t.id + '">'
+      + '<span class="tic">' + icon(t.icon) + '</span>'
+      + '<span class="tbody"><span class="tt">' + esc(t.name) + '</span>'
+      + '<span class="tb">' + esc(t.sub) + '</span></span>'
+      + '<span class="refchip">' + esc(t.ref) + '</span></button>';
+  });
+  var el = document.getElementById('tool-tiles');
+  el.innerHTML = h;
+  Array.prototype.forEach.call(el.querySelectorAll('[data-tool]'), function(btn){
+    btn.addEventListener('click', function(){ location.hash = '#/tool/' + btn.getAttribute('data-tool'); });
+  });
+  show('tools');
+}
+function openTool(id){
+  var t = null;
+  TOOLS.forEach(function(x){ if(x.id === id) t = x; });
+  if(!t){ location.hash = '#/tools'; return; }
+  currentTool = id;
+  document.getElementById('tool-title').textContent = t.name;
+  document.getElementById('tool-sub').textContent = t.sub;
+  TOOL_RENDER[id]();
+  show('tool');
+}
+
+/* ---------- TOOL 1: Tick & Mosquito (§8.7) ---------- */
+function renderTickTool(){
+  var el = toolBody();
+  el.innerHTML =
+    '<div class="qcard"><h3>Lawn size</h3>'
+    + '<p class="qsub">Prices round UP to the next 5,000 sq ft tier and update as you type.</p>'
+    + '<label class="fld"><span>Lawn size (sq ft)</span><input id="tk-sqft" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 12000" /></label>'
+    + '<div id="tk-out"><p style="margin:0;color:var(--ink-2)">Enter the lawn size to see the three prices for its tier.</p></div>'
+    + startOverBtn()
+    + refBlock(8, '8.7', '8.7 Tick & Mosquito Service', '§8.7 — Tick & Mosquito Service')
+    + '</div>'
+    + '<div class="qcard"><h3>How to measure &amp; what&rsquo;s applied</h3>'
+    + '<p>Measure in GorillaDesk: Locations &rarr; Property Estimation Tool &rarr; Open Map &rarr; Lawn tool, then map the building and subtract it.</p>'
+    + '<p><b>Tick &amp; Mosquito:</b> Bifen LP granular + Vector Kleer spray.<br /><b>Botanical:</b> Nature-Cide granular + Vector Kleer.</p></div>';
+  bindGoto(el);
+  bindRestart(el, renderTickTool);
+  document.getElementById('tk-sqft').addEventListener('input', tickCalc);
+}
+function tickCalc(){
+  var out = document.getElementById('tk-out');
+  var v = numVal('tk-sqft');
+  if(v === null || v <= 0){
+    out.innerHTML = '<p style="margin:0;color:var(--ink-2)">Enter the lawn size to see the three prices for its tier.</p>';
+    return;
+  }
+  var units = Math.max(1, Math.ceil(v / 5000));
+  var tier = units * 5000;
+  var tick = 325 + 50 * (units - 1), mosq = 125 + 50 * (units - 1), bot = 395 + 50 * (units - 1);
+  out.innerHTML = '<div class="result-box">'
+    + '<p class="ref-line" style="margin:0 0 6px">' + v.toLocaleString('en-US') + ' sq ft &rarr; priced at the ' + tier.toLocaleString('en-US') + ' sq ft tier</p>'
+    + '<div class="price-row"><span class="pr-l">Tick</span><span class="pr-v">' + money(tick) + '</span></div>'
+    + '<div class="price-row"><span class="pr-l">Mosquito</span><span class="pr-v">' + money(mosq) + '</span></div>'
+    + '<div class="price-row"><span class="pr-l">Botanical Tick (Nature-Cide)</span><span class="pr-v">' + money(bot) + '</span></div>'
+    + (units > 14 ? '<p style="margin:10px 0 0">Above the printed table (70,000 sq ft) — $50 added per extra 5,000 sq ft to each price, per the tier steps in §8.7.</p>' : '')
+    + '</div>';
+}
+
+/* ---------- TOOL 2: Termite (§8.6, Master Matrix rates) ---------- */
+var TERM_SERVICES = [
+  { id:'bait',   name:'New Bait System Installation (Trelona ATBS)', base:0,   incl:0,  per:8.50 },
+  { id:'spot',   name:'Termite Spot Treatment (active swarms only)', base:395, incl:50, per:8.50 },
+  { id:'trench', name:'Trench &amp; Rod Treatment',                  base:495, incl:50, per:9.00 },
+  { id:'slab',   name:'Termite Slab Injection',                      base:395, incl:50, per:11.00 }
+];
+function termSvc(id){
+  for(var i = 0; i < TERM_SERVICES.length; i++) if(TERM_SERVICES[i].id === id) return TERM_SERVICES[i];
+  return TERM_SERVICES[0];
+}
+function termPrice(svc, lf){
+  if(svc.incl === 0) return svc.per * lf;
+  if(lf <= svc.incl) return svc.base;
+  return svc.base + svc.per * (lf - svc.incl);
+}
+function termFormula(svc, lf){
+  if(svc.incl === 0) return money(svc.per) + ' × ' + lf + ' LF (no base fee)';
+  if(lf <= svc.incl) return money(svc.base) + ' base — covers up to ' + svc.incl + ' LF';
+  return money(svc.base) + ' base (covers ' + svc.incl + ' LF) + ' + money(svc.per) + ' × ' + (lf - svc.incl) + ' LF over';
+}
+function termOptions(sel){
+  var h = '';
+  TERM_SERVICES.forEach(function(s){
+    h += '<option value="' + s.id + '"' + (s.id === sel ? ' selected' : '') + '>' + s.name + '</option>';
+  });
+  return h;
+}
+function renderTermiteTool(){
+  var el = toolBody();
+  el.innerHTML =
+    '<div class="qcard"><h3>Service price</h3>'
+    + '<p class="qsub">Master Termite Pricing &amp; Coverage Matrix rates.</p>'
+    + '<label class="fld"><span>Service</span><select id="tm-svc">' + termOptions('bait') + '</select></label>'
+    + '<label class="fld"><span>Linear feet (LF)</span><input id="tm-lf" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 150" /></label>'
+    + '<button class="big-btn" type="button" id="tm-calc">Calculate</button>'
+    + '<div id="tm-out"></div>'
+    + refBlock(8, '8.6', '8.6 Termite Services', '§8.6 — Termite Services')
+    + '</div>'
+    + '<div class="qcard"><h3>Termite Takeover / Transfer</h3>'
+    + '<p class="qsub">Client has existing stations from another company. Up to 16 stations $595 — each additional station +$35.</p>'
+    + '<label class="fld"><span>Number of stations</span><input id="tm-to-n" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 20" /></label>'
+    + '<button class="big-btn" type="button" id="tm-to-calc">Calculate</button>'
+    + '<div id="tm-to-out"></div>'
+    + refBlock(8, '8.6', '8.6 Termite Services', '§8.6 — Termite Services')
+    + '</div>'
+    + '<div class="qcard"><h3>Bait Station Maintenance</h3>'
+    + '<p class="qsub">Up to 16 stations $39.99/month — each additional 5 stations +$10/month.</p>'
+    + '<label class="fld"><span>Number of stations</span><input id="tm-mt-n" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 20" /></label>'
+    + '<button class="big-btn" type="button" id="tm-mt-calc">Calculate</button>'
+    + '<div id="tm-mt-out"></div>'
+    + refBlock(8, '8.6', '8.6 Termite Services', '§8.6 — Termite Services')
+    + '</div>'
+    + '<div class="qcard"><h3>Split Jim&rsquo;s bundle</h3>'
+    + '<p class="qsub">Jim quoted one flat price for a bundle. Price the primary service at the standard matrix rate — the rest of the flat total goes to the Termite Spot Treatment line.</p>'
+    + '<label class="fld"><span>Jim&rsquo;s flat total ($)</span><input id="tm-b-total" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000" /></label>'
+    + '<label class="fld"><span>Linear feet (LF)</span><input id="tm-b-lf" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 60" /></label>'
+    + '<label class="fld"><span>Primary service</span><select id="tm-b-svc">' + termOptions('bait') + '</select></label>'
+    + '<button class="big-btn" type="button" id="tm-b-calc">Split the bundle</button>'
+    + '<div id="tm-b-out"></div>'
+    + startOverBtn()
+    + refBlock(8, '8.6', '8.6 Termite Services', '§8.6 — Termite Services')
+    + '</div>';
+  bindGoto(el);
+  bindRestart(el, renderTermiteTool);
+  document.getElementById('tm-calc').addEventListener('click', function(){
+    var out = document.getElementById('tm-out');
+    var lf = numVal('tm-lf');
+    if(lf === null || lf <= 0){ out.innerHTML = '<div class="warn-box">Enter the linear feet to calculate the price.</div>'; return; }
+    var svc = termSvc(document.getElementById('tm-svc').value);
+    var price = termPrice(svc, lf);
+    var h = '<div class="result-box"><p class="ref-line" style="margin:0 0 4px">' + svc.name.replace(/&amp;/g, '&') + ' — ' + lf + ' LF</p>'
+      + '<div class="price-big">' + money(price) + '</div>'
+      + '<p style="margin:8px 0 0">' + termFormula(svc, lf) + ' = <b>' + money(price) + '</b></p>';
+    if(svc.id === 'bait'){
+      h += '<p style="margin:6px 0 0">Stations are placed every 15 ft &rarr; <b>about ' + Math.ceil(lf / 15) + ' stations</b> for ' + lf + ' LF.</p>';
+    }
+    out.innerHTML = h + '</div>';
+  });
+  document.getElementById('tm-to-calc').addEventListener('click', function(){
+    var out = document.getElementById('tm-to-out');
+    var n = numVal('tm-to-n');
+    if(n === null || n <= 0){ out.innerHTML = '<div class="warn-box">Enter the number of stations.</div>'; return; }
+    n = Math.floor(n);
+    var extra = Math.max(0, n - 16);
+    var price = 595 + 35 * extra;
+    out.innerHTML = '<div class="result-box"><p class="ref-line" style="margin:0 0 4px">Takeover / Transfer — ' + n + ' stations</p>'
+      + '<div class="price-big">' + money(price) + '</div>'
+      + '<p style="margin:8px 0 0">$595.00 for up to 16 stations' + (extra ? ' + $35.00 × ' + extra + ' additional station' + (extra === 1 ? '' : 's') : '') + ' = <b>' + money(price) + '</b></p></div>';
+  });
+  document.getElementById('tm-mt-calc').addEventListener('click', function(){
+    var out = document.getElementById('tm-mt-out');
+    var n = numVal('tm-mt-n');
+    if(n === null || n <= 0){ out.innerHTML = '<div class="warn-box">Enter the number of stations.</div>'; return; }
+    n = Math.floor(n);
+    var extra = Math.max(0, n - 16);
+    var groups = Math.ceil(extra / 5);
+    var price = 39.99 + 10 * groups;
+    out.innerHTML = '<div class="result-box"><p class="ref-line" style="margin:0 0 4px">Bait Station Maintenance — ' + n + ' stations</p>'
+      + '<div class="price-big">' + money(price) + '<span style="font-size:22px">/month</span></div>'
+      + '<p style="margin:8px 0 0">$39.99/month for up to 16 stations' + (extra ? ' + $10.00 × ' + groups + ' group' + (groups === 1 ? '' : 's') + ' of 5 additional stations' : '') + '</p>'
+      + '<p style="margin:6px 0 0"><b>Maintenance is a recurring monthly invoice — do not set up a job for it.</b></p></div>';
+  });
+  document.getElementById('tm-b-calc').addEventListener('click', function(){
+    var out = document.getElementById('tm-b-out');
+    var total = numVal('tm-b-total'), lf = numVal('tm-b-lf');
+    if(total === null || total <= 0 || lf === null || lf <= 0){
+      out.innerHTML = '<div class="warn-box">Enter Jim&rsquo;s flat total and the linear feet to split the bundle.</div>'; return;
+    }
+    var svc = termSvc(document.getElementById('tm-b-svc').value);
+    var primary = termPrice(svc, lf);
+    var rest = Math.round((total - primary) * 100) / 100;
+    if(rest < 0){
+      out.innerHTML = '<div class="warn-box"><b>That doesn&rsquo;t split.</b> The primary service at its standard price (' + money(primary) + ') is more than Jim&rsquo;s flat total (' + money(total) + '), so the Spot Treatment line would be negative. Check the LF and the flat total with Jim before entering it.</div>';
+      return;
+    }
+    out.innerHTML = '<div class="result-box"><p class="ref-line" style="margin:0 0 6px">How to enter it in GorillaDesk</p>'
+      + '<ol class="steps-list">'
+      + '<li><b>Step 1:</b> Price the primary service: ' + termFormula(svc, lf) + ' = <b>' + money(primary) + '</b></li>'
+      + '<li><b>Step 2:</b> Subtract from Jim&rsquo;s flat total: ' + money(total) + ' − ' + money(primary) + ' = <b>' + money(rest) + '</b></li>'
+      + '<li><b>Step 3:</b> Enter two line items:</li></ol>'
+      + '<div class="lines">'
+      + '<div class="ln"><span class="ll">Line item 1: ' + svc.name.replace(/&amp;/g, '&') + '</span><span class="lv">' + money(primary) + '</span></div>'
+      + '<div class="ln"><span class="ll">Line item 2: Termite Spot Treatment</span><span class="lv">' + money(rest) + '</span></div>'
+      + '<div class="ln total"><span class="ll">Total (matches Jim&rsquo;s quote)</span><span class="lv">' + money(total) + '</span></div>'
+      + '</div></div>';
+  });
+}
+
+/* ---------- TOOL 3: Bee / Wasp Wizard (§3.7) ---------- */
+var bee = null;
+function resetBee(){ bee = { step:0, entering:null, species:null, height:null, access:null }; }
+function renderBeeTool(){
+  if(!bee) resetBee();
+  var el = toolBody();
+  if(bee.step === 0){
+    el.innerHTML = '<div class="qcard"><h3>Ask the client first</h3>'
+      + '<p class="qsub">The five questions from §3.7. Photos are strongly encouraged — they help with identification, pricing, equipment needs and technician assignment.</p>'
+      + '<ol class="ask-list">'
+      + '<li>Can you send a picture of the insect and/or nest?</li>'
+      + '<li>Where is the activity located?</li>'
+      + '<li>Approximately how high is it?</li>'
+      + '<li>Are they entering/exiting a hole, crack, siding gap, soffit, or other void?</li>'
+      + '<li>Is the nest visible from the exterior?</li></ol>'
+      + '<button class="big-btn" type="button" id="bee-start">I have the answers — start</button>'
+      + refBlock(3, '3.7', '3.7 Bee/Wasp Scheduling', '§3.7 — Bee/Wasp Scheduling')
+      + '</div>';
+    bindGoto(el);
+    document.getElementById('bee-start').addEventListener('click', function(){ bee.step = 1; renderBeeTool(); });
+    return;
+  }
+  if(bee.step >= 5){ renderBeeResult(el); return; }
+  var qs = [
+    { key:'entering', q:'Are they entering or exiting a hole, crack, siding gap, soffit, or other void in the structure?', opts:[['yes','Yes — entering / exiting a void'],['no','No']] },
+    { key:'species',  q:'What is it? (Use the photo if they sent one.)', opts:[['yj','Yellow Jackets'],['pw','Paper Wasp or Mud Dauber'],['unsure','Not sure']] },
+    { key:'height',   q:'How high is the activity or nest?', opts:[['low','20 ft or under'],['mid','Over 20 ft, up to 30 ft'],['high','Over 30 ft']] },
+    { key:'access',   q:'Is ladder access difficult, or is it a very large concentration of stinging insects?', opts:[['yes','Yes'],['no','No']] }
+  ];
+  var cur = qs[bee.step - 1];
+  var h = '<div class="qcard"><p class="wiz-step">Question ' + bee.step + ' of 4</p><h3>' + cur.q + '</h3>';
+  cur.opts.forEach(function(o){ h += '<button class="opt-btn" type="button" data-bee="' + o[0] + '"><b>' + o[1] + '</b></button>'; });
+  h += '<div class="wiz-nav"><button class="big-btn ghost" type="button" id="bee-back">Back</button></div></div>';
+  el.innerHTML = h;
+  Array.prototype.forEach.call(el.querySelectorAll('[data-bee]'), function(btn){
+    btn.addEventListener('click', function(){
+      bee[cur.key] = btn.getAttribute('data-bee');
+      if(cur.key === 'species' && bee.species === 'unsure') bee.step = 5;
+      else bee.step++;
+      renderBeeTool();
+    });
+  });
+  document.getElementById('bee-back').addEventListener('click', function(){
+    bee.step = bee.step === 1 ? 0 : bee.step - 1;
+    renderBeeTool();
+  });
+}
+function renderBeeResult(el){
+  var h = '';
+  if(bee.species === 'unsure'){
+    h = '<div class="qcard"><h3>Get the photo first</h3>'
+      + '<p>The price depends on the species, so don&rsquo;t quote a firm price yet. Ask the client to send a picture of the insect and/or nest — photos help with identification, pricing, equipment needs, and technician assignment.</p>'
+      + '<p>Once it&rsquo;s identified, run this wizard again. The two outcomes: <b>Standard $345 + tax</b> (Yellow Jackets at or below 20 ft; accessible visible nests up to 30 ft) or <b>Advanced $425 + tax</b> (Yellow Jackets entering voids above 20 ft; nests above 30 ft; difficult access; large concentrations).</p>'
+      + startOverBtn()
+      + refBlock(3, '3.7', '3.7 Bee/Wasp Scheduling', '§3.7 — Bee/Wasp Scheduling')
+      + '</div>';
+  } else {
+    var adv = false, reasons = [];
+    if(bee.access === 'yes'){ adv = true; reasons.push('Difficult ladder access or a large concentration of stinging insects.'); }
+    if(bee.species === 'yj' && bee.entering === 'yes' && bee.height !== 'low'){ adv = true; reasons.push('Yellow Jackets entering structural voids above 20 ft.'); }
+    if(bee.species === 'pw' && bee.height === 'high'){ adv = true; reasons.push('Paper Wasp / Mud Dauber nest above 30 ft.'); }
+    if(bee.height === 'high' && bee.species !== 'pw'){ adv = true; reasons.push('Activity above 30 ft — beyond the 30 ft backpack-sprayer reach covered by Standard service.'); }
+    if(!adv){
+      if(bee.species === 'yj' && bee.height === 'low') reasons.push('Yellow Jackets at or below 20 ft.');
+      else reasons.push('Accessible exterior visible nest — up to 30 ft with a backpack sprayer.');
+    }
+    h = '<div class="qcard"><p class="wiz-step">Book this as</p>'
+      + '<div class="price-big">' + (adv ? 'ADVANCED' : 'STANDARD') + '</div>'
+      + '<div class="price-big" style="margin-top:4px">' + (adv ? '$425' : '$345') + ' <span style="font-size:22px">+ tax</span></div>'
+      + '<p style="font-size:17px;margin:10px 0 0"><b>' + (adv ? '2 technicians' : '1 technician') + ' &bull; 30-day warranty</b></p>'
+      + '<p style="margin:10px 0 0"><b>Why:</b> ' + reasons.join(' ') + '</p>'
+      + startOverBtn()
+      + refBlock(3, '3.7', '3.7 Bee/Wasp Scheduling', '§3.7 — Bee/Wasp Scheduling')
+      + '</div>';
+  }
+  el.innerHTML = h;
+  bindGoto(el);
+  bindRestart(el, function(){ resetBee(); renderBeeTool(); });
+}
+
+/* ---------- TOOL 4: Quote Math Helper (§6.7 + §3.6) ---------- */
+var QUOTE_DISCOUNTS = [
+  { name:'No discount', pct:0 },
+  { name:'15% — MOS, military & veterans (lifetime)', pct:15 },
+  { name:'10% — Senior citizens (lifetime)', pct:10 },
+  { name:'10% — New client (first service only)', pct:10 },
+  { name:'10% — Chappaqua Moms referral (first service only)', pct:10 }
+];
+var QUOTE_REGIONS = [
+  { name:'Westchester County', tax:8.38,  sur:0 },
+  { name:'Yonkers',            tax:8.875, sur:0 },
+  { name:'Bronx',              tax:8.875, sur:100 },
+  { name:'Connecticut',        tax:6.35,  sur:100 },
+  { name:'Putnam County',      tax:8.365, sur:100 },
+  { name:'Rockland County',    tax:8.375, sur:100 }
+];
+var quoteInsp = false;
+function renderQuoteTool(){
+  var el = toolBody();
+  var dOpts = '', rOpts = '';
+  QUOTE_DISCOUNTS.forEach(function(d, i){ dOpts += '<option value="' + i + '">' + d.name + '</option>'; });
+  QUOTE_REGIONS.forEach(function(r, i){ rOpts += '<option value="' + i + '">' + r.name + ' — ' + r.tax + '% tax' + (r.sur ? ', +$100 travel surcharge' : ', no surcharge') + '</option>'; });
+  el.innerHTML = '<div class="qcard"><h3>Quote details</h3>'
+    + '<label class="fld"><span>Service subtotal ($)</span><input id="q-sub" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 850" /></label>'
+    + '<span style="display:block;font-weight:700;font-size:14.5px;margin-bottom:6px">Client already paid the $195 inspection fee?</span>'
+    + '<div class="seg"><button class="opt-btn" type="button" id="q-insp-no"><b>No</b></button><button class="opt-btn" type="button" id="q-insp-yes"><b>Yes — $195 paid</b></button></div>'
+    + '<label class="fld"><span>Discount</span><select id="q-disc">' + dOpts + '</select></label>'
+    + '<label class="fld"><span>Region</span><select id="q-reg">' + rOpts + '</select></label>'
+    + '<button class="big-btn" type="button" id="q-calc">Do the math</button>'
+    + '<div id="q-out"></div>'
+    + startOverBtn()
+    + '<p class="ref-line">§6.7 — Discounts &amp; Inspection Credit &bull; §3.6 — Regional Tax &amp; Surcharges</p>'
+    + srcLink(6, '6.7', '6.7 Master Discount Tiers') + srcLink(3, '3.6', '3.6 Regional Service Areas')
+    + '</div>';
+  bindGoto(el);
+  bindRestart(el, function(){ quoteInsp = false; renderQuoteTool(); });
+  function paintInsp(){
+    document.getElementById('q-insp-yes').classList.toggle('sel', quoteInsp);
+    document.getElementById('q-insp-no').classList.toggle('sel', !quoteInsp);
+  }
+  paintInsp();
+  document.getElementById('q-insp-yes').addEventListener('click', function(){ quoteInsp = true; paintInsp(); });
+  document.getElementById('q-insp-no').addEventListener('click', function(){ quoteInsp = false; paintInsp(); });
+  document.getElementById('q-calc').addEventListener('click', quoteCalc);
+}
+function quoteCalc(){
+  var out = document.getElementById('q-out');
+  var sub = numVal('q-sub');
+  if(sub === null || sub < 0){ out.innerHTML = '<div class="warn-box">Enter the service subtotal to run the quote math.</div>'; return; }
+  var disc = QUOTE_DISCOUNTS[parseInt(document.getElementById('q-disc').value, 10)];
+  var reg = QUOTE_REGIONS[parseInt(document.getElementById('q-reg').value, 10)];
+  var discAmt = Math.round(sub * disc.pct) / 100;
+  var creditEligible = quoteInsp && sub >= 500;
+  var estCredit = 0, acctCredit = 0;
+  if(creditEligible){ if(disc.pct > 0) acctCredit = 195; else estCredit = 195; }
+  var taxable = Math.max(0, sub + reg.sur - discAmt - estCredit);
+  var tax = Math.round(taxable * reg.tax) / 100;
+  var total = Math.round((taxable + tax) * 100) / 100;
+  var h = '<div class="result-box"><p class="ref-line" style="margin:0 0 4px">Read it to the client, line by line</p><div class="lines">'
+    + '<div class="ln"><span class="ll">Service subtotal</span><span class="lv">' + money(sub) + '</span></div>'
+    + '<div class="ln"><span class="ll">Travel surcharge (' + reg.name + ')</span><span class="lv">' + (reg.sur ? '+' + money(reg.sur) : money(0)) + '</span></div>';
+  if(disc.pct > 0) h += '<div class="ln"><span class="ll">Discount — ' + disc.name.split(' — ')[1] + '</span><span class="lv">−' + money(discAmt).replace('−', '') + '</span></div>';
+  if(estCredit) h += '<div class="ln"><span class="ll">Inspection credit (on this estimate)</span><span class="lv">−' + money(195).replace('−', '') + '</span></div>';
+  if(acctCredit) h += '<div class="ln"><span class="ll">Inspection credit</span><span class="lv">$195.00 on the account</span></div>';
+  h += '<div class="ln"><span class="ll">Taxable amount</span><span class="lv">' + money(taxable) + '</span></div>'
+    + '<div class="ln"><span class="ll">Tax (' + reg.name + ' ' + reg.tax + '%)</span><span class="lv">' + money(tax) + '</span></div>'
+    + '<div class="ln total"><span class="ll">TOTAL</span><span class="lv">' + money(total) + '</span></div>'
+    + '</div>';
+  if(acctCredit){
+    h += '<div class="warn-box" style="margin-top:14px"><b>Inspection credit:</b> $195.00 goes on the account as a <b>Credit on the Account</b> — do NOT put the $195 on the estimate, because a percentage discount also applies.</div>'
+      + '<div class="script" style="margin-top:12px"><span class="script-lbl">Note to put on the estimate</span><p>Final invoice will include the $195 inspection credit.</p></div>';
+  }
+  if(estCredit) h += '<p style="margin:12px 0 0">Inspection credit applied as a flat <b>$195.00 discount on the estimate</b> (no percentage discount on this quote).</p>';
+  if(quoteInsp && sub < 500) h += '<div class="warn-box"><b>No inspection credit:</b> the $195 is credited only when the approved service is $500 or more. This service is ' + money(sub) + '.</div>';
+  h += '<p style="margin:12px 0 0;color:var(--ink-2);font-size:14.5px">Rules: discounts apply to service lines only — never to the inspection fee. Only the $195 base is ever credited, never the $16.33 tax on it.</p>';
+  out.innerHTML = h + '</div>';
+}
+
+/* ---------- TOOL 5: Plan Finder (§8.2–8.4) ---------- */
+var PLAN_GROUPS = [
+  { label:'Covered by Silver', pests:['Mice','Rats','Spiders','Camel crickets','Roaches','Water bugs','Silverfish','Centipedes','Millipedes','Pill / sow bugs','Earwigs'] },
+  { label:'Gold adds', pests:['Small ants','Wasp nests (up to 20 ft)','Pantry beetles','Springtails','Indian meal moths','Weevils'] },
+  { label:'Platinum adds', pests:['Fleas','Carpenter ants','Carpenter bees','Carpet beetles','Clover mites','Stink bugs / overwintering pests'] }
+];
+var planSel = {};
+function renderPlanTool(){
+  var el = toolBody();
+  var h = '<div class="qcard"><h3>What is the client dealing with?</h3>'
+    + '<p class="qsub">Tap every pest that applies — the result is the lowest plan that covers them all.</p>';
+  PLAN_GROUPS.forEach(function(g, gi){
+    h += '<p class="grp-lbl">' + g.label + '</p><div class="chips">';
+    g.pests.forEach(function(p, pi){
+      var key = gi + '-' + pi;
+      h += '<button class="chip' + (planSel[key] ? ' on' : '') + '" type="button" data-chip="' + key + '">' + esc(p) + '</button>';
+    });
+    h += '</div>';
+  });
+  h += '<div id="plan-out"></div>'
+    + '<p class="rodent-line"><b>Rodent problem?</b> Always recommend an Inspection + 4-Visit Rodent Service (§2.4).</p>'
+    + startOverBtn()
+    + refBlock(8, '8.2', '8.2–8.4 Service Plans', '§8.2–8.4 — Silver / Gold / Platinum Plans')
+    + '</div>';
+  el.innerHTML = h;
+  bindGoto(el);
+  bindRestart(el, function(){ planSel = {}; renderPlanTool(); });
+  Array.prototype.forEach.call(el.querySelectorAll('[data-chip]'), function(chip){
+    chip.addEventListener('click', function(){
+      var key = chip.getAttribute('data-chip');
+      if(planSel[key]) delete planSel[key]; else planSel[key] = true;
+      chip.classList.toggle('on', !!planSel[key]);
+      planUpdate();
+    });
+  });
+  planUpdate();
+}
+function planUpdate(){
+  var out = document.getElementById('plan-out');
+  if(!out) return;
+  var tier = -1;
+  Object.keys(planSel).forEach(function(k){
+    if(planSel[k]){ var t = parseInt(k.split('-')[0], 10); if(t > tier) tier = t; }
+  });
+  if(tier < 0){
+    out.innerHTML = '<div class="result-box"><p style="margin:0;font-size:16.5px">Tap at least one pest above to see the plan.</p></div>';
+    return;
+  }
+  var p = DATA.quick.plans[tier];
+  var perk = p.perk.replace(/^Plan Perks?:\s*/, '');
+  if(tier === 2) perk = perk.replace(/^Includes an Annual Termite Inspection and a /, 'A ');
+  out.innerHTML = '<div class="result-box"><p class="ref-line" style="margin:0 0 4px">Lowest plan that covers everything tapped</p>'
+    + '<div class="price-big">' + esc(p.name) + '</div>'
+    + '<p style="margin:10px 0 0"><b>Covered pests:</b> ' + esc(p.covered.replace(/^Covered Pests:\s*/, '')) + '</p>'
+    + '<p style="margin:8px 0 0"><b>Specialty-service discount:</b> ' + esc(perk) + '</p>'
+    + (tier === 2 ? '<p style="margin:8px 0 0"><b>Platinum also includes an Annual Termite Inspection.</b></p>' : '')
+    + '</div>';
+}
+
+/* ---------- TOOL 6: Intake Call Wizard (§2.1–2.5) ---------- */
+var intake = null;
+function resetIntake(){ intake = { step:1, checks:{}, triage:null }; }
+function intakeCheckRow(id, label, note){
+  var on = !!intake.checks[id];
+  return '<button class="check-row' + (on ? ' done' : '') + '" type="button" data-icheck="' + id + '">'
+    + '<span class="box">' + icon('checkSm') + '</span>'
+    + '<span><span class="ct">' + label + '</span>' + (note ? '<span class="ck-note">' + note + '</span>' : '') + '</span></button>';
+}
+function renderIntakeTool(){
+  if(!intake) resetIntake();
+  var el = toolBody();
+  var s = intake.step, body = '';
+  if(s === 1){
+    body = '<h3>The greeting</h3>'
+      + '<div class="script"><span class="script-lbl">Script — use as written</span><p>&ldquo;QualityPro Pest &amp; Wildlife, this is [Your Name]. How may I help you?&rdquo;</p></div>'
+      + '<p>Answer every inbound call with this exact greeting.</p>'
+      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
+  } else if(s === 2){
+    body = '<h3>Client details</h3><p class="qsub">Collect and log each one. Tap as you get them.</p>'
+      + intakeCheckRow('name', 'Full name', 'Verify the exact spelling.')
+      + intakeCheckRow('mobile', 'Primary mobile phone', 'Required for automated text notifications.')
+      + intakeCheckRow('email', 'Email address', 'Required for paperless invoicing and estimates.')
+      + intakeCheckRow('addr', 'Complete property address', '')
+      + intakeCheckRow('source', 'Lead source', 'Create the Lead Source on the profile.')
+      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
+  } else if(s === 3){
+    body = '<h3>Secondary contact</h3>'
+      + '<div class="script"><span class="script-lbl">Ask — use as written</span><p>&ldquo;Would you like me to add another person to the account today, such as a spouse, partner, or tenant?&rdquo;</p></div>'
+      + '<p><b>Rule:</b> secondary contacts go in the <b>Contacts Tab only</b> — never the Account Tab. This keeps SMS tracking logs separate.</p>'
+      + refBlock(2, '2.2', '2.2 Inbound Communication Routing', '§2.2 — Inbound Communication Routing');
+  } else if(s === 4){
+    body = '<h3>The 5 discovery questions</h3><p class="qsub">Ask these on every call. Listen to the client&rsquo;s concerns and log detailed notes as they explain.</p>'
+      + intakeCheckRow('q1', '1. What is going on?', '')
+      + intakeCheckRow('q2', '2. What pest or animal do you think you have?', '')
+      + intakeCheckRow('q3', '3. What time of day do you hear the noise?', '')
+      + intakeCheckRow('q4', '4. What specific activity are you seeing?', '')
+      + intakeCheckRow('q5', '5. How tall is your home?', 'Decides if a 2-person ladder crew is necessary.')
+      + refBlock(2, '2.3', '2.3 Visit Type Triage', '§2.3 — Visit Type Triage');
+  } else if(s === 5){
+    var tri = [
+      ['inspection', 'Inspection Job', 'Initial diagnostic assessment. The inspection fee is credited toward future service valued at $500 or more.'],
+      ['direct', 'Direct Service Job', 'Treatment or removal performed right away; the fee is charged at the start of service. If the tech arrives, finds no activity and the client refuses treatment, charge the $195.00 service visit fee.'],
+      ['assessment', 'No-Charge Assessment', 'The client is asking about general pests but isn&rsquo;t sure what type of plan they need — we can offer a no-charge assessment.']
+    ];
+    body = '<h3>Triage — pick the visit type</h3><p class="qsub">Tap the outcome that fits this call.</p>';
+    tri.forEach(function(t){
+      body += '<button class="opt-btn' + (intake.triage === t[0] ? ' sel' : '') + '" type="button" data-triage="' + t[0] + '"><b>' + t[1] + '</b><span class="ob-s">' + t[2] + '</span></button>';
+    });
+    body += refBlock(2, '2.3', '2.3 Visit Type Triage', '§2.3 — Visit Type Triage');
+  } else if(s === 6){
+    body = '<h3>Book it</h3>'
+      + '<ul><li><b>Create the profile as a LEAD first</b> — every new client starts as a lead (§2.1).</li>'
+      + '<li><b>Check the account balance</b> before booking add-ons or same-day emergencies (§3.3).</li>'
+      + '<li>Tell the client there is a <b>3-hour arrival window</b>. Time window templates: Morning 8 AM–11 AM &bull; Mid-Day 11 AM–2 PM &bull; Afternoon 2 PM–5 PM (§12).</li></ul>'
+      + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
+  } else {
+    body = '<h3>Credit card to hold</h3>'
+      + '<div class="script"><span class="script-lbl">Script — use as written</span><p>&ldquo;Finally, we require a credit card to hold the appointment. We will not charge the card until the service is started.&rdquo;</p></div>'
+      + '<p>Enter the cardholder name, complete card number, expiration date and CVC directly into the encrypted payment vault.</p>'
+      + '<p><b>That&rsquo;s the call.</b> The appointment is held once the card is on file.</p>'
+      + refBlock(2, '2.5', '2.5 Credit Card Collection', '§2.5 — Credit Card Collection');
+  }
+  var h = '<div class="qcard"><p class="wiz-step">Step ' + s + ' of 7</p>'
+    + '<div class="pbar"><i style="width:' + Math.round(s / 7 * 100) + '%"></i></div>'
+    + body
+    + '<div class="wiz-nav">'
+    + '<button class="big-btn ghost" type="button" id="in-back"' + (s === 1 ? ' disabled style="opacity:.4"' : '') + '>Back</button>'
+    + '<button class="big-btn" type="button" id="in-next">' + (s === 7 ? 'Finish — back to tools' : 'Next') + '</button>'
+    + '</div>'
+    + startOverBtn()
+    + '</div>';
+  el.innerHTML = h;
+  bindGoto(el);
+  bindRestart(el, function(){ resetIntake(); renderIntakeTool(); });
+  Array.prototype.forEach.call(el.querySelectorAll('[data-icheck]'), function(btn){
+    btn.addEventListener('click', function(){
+      var k = btn.getAttribute('data-icheck');
+      if(intake.checks[k]) delete intake.checks[k]; else intake.checks[k] = true;
+      renderIntakeTool();
+    });
+  });
+  Array.prototype.forEach.call(el.querySelectorAll('[data-triage]'), function(btn){
+    btn.addEventListener('click', function(){ intake.triage = btn.getAttribute('data-triage'); renderIntakeTool(); });
+  });
+  var back = document.getElementById('in-back');
+  if(back) back.addEventListener('click', function(){ if(intake.step > 1){ intake.step--; renderIntakeTool(); } });
+  document.getElementById('in-next').addEventListener('click', function(){
+    if(intake.step === 7){ resetIntake(); location.hash = '#/tools'; }
+    else { intake.step++; renderIntakeTool(); }
+  });
+}
+
+/* ---------- TOOL 7: Scheduling Date Checker (§12 + §8.8.1 + §9.1) ---------- */
+var DC_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var DC_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function renderDateTool(){
+  var el = toolBody();
+  el.innerHTML = '<div class="qcard"><h3>Check a date &amp; time</h3>'
+    + '<label class="fld"><span>Date</span><input id="dc-date" type="date" /></label>'
+    + '<label class="fld"><span>Start time</span><input id="dc-time" type="time" /></label>'
+    + '<label class="fld"><span>Job type</span><select id="dc-type">'
+    + '<option value="general">General service</option><option value="inspection">Inspection</option>'
+    + '<option value="trapping">Trapping</option><option value="exclusion">Exclusion</option>'
+    + '<option value="bat">Bat work</option><option value="other">Other</option></select></label>'
+    + '<label class="fld" id="dc-pkg-wrap" style="display:none"><span>Trapping package</span><select id="dc-pkg">'
+    + '<option value="2">Trapping (2-Visit)</option><option value="3">Trapping (3-Visit)</option><option value="5">Trapping (5-Visit)</option></select></label>'
+    + '<button class="big-btn" type="button" id="dc-check">Check it</button>'
+    + '<div id="dc-out"></div>'
+    + startOverBtn()
+    + '<p class="ref-line">§12 — Scheduling SOP &bull; §8.8.1 — Trapping Services &bull; §9.1 — Bat Standards</p>'
+    + srcLink(12, '1', 'Chapter 12 — Scheduling SOP') + srcLink(9, '9.1', '9.1 Bat Standards') + srcLink(8, '8.8', '8.8 Wildlife & Trapping')
+    + '</div>';
+  bindGoto(el);
+  bindRestart(el, renderDateTool);
+  document.getElementById('dc-type').addEventListener('change', function(){
+    document.getElementById('dc-pkg-wrap').style.display = this.value === 'trapping' ? 'block' : 'none';
+  });
+  document.getElementById('dc-check').addEventListener('click', dateCheck);
+}
+function flagRow(kind, title, text){
+  var sym = kind === 'ok' ? '✓' : (kind === 'warn' ? '!' : 'i');
+  return '<div class="flag ' + kind + '"><span class="fi">' + sym + '</span><span class="ft"><b>' + title + '</b>' + text + '</span></div>';
+}
+function dateCheck(){
+  var out = document.getElementById('dc-out');
+  var dv = document.getElementById('dc-date').value;
+  var tv = document.getElementById('dc-time').value;
+  if(!dv || !tv){ out.innerHTML = '<div class="warn-box">Pick a date and a start time, then tap Check it.</div>'; return; }
+  var p = dv.split('-');
+  var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+  var wd = d.getDay();
+  var md = d.getMonth() * 100 + d.getDate();
+  var tp = tv.split(':');
+  var mins = parseInt(tp[0], 10) * 60 + parseInt(tp[1], 10);
+  var type = document.getElementById('dc-type').value;
+  var typeName = document.getElementById('dc-type').options[document.getElementById('dc-type').selectedIndex].text;
+  var h = '<div class="result-box"><p class="ref-line" style="margin:0 0 6px">' + DC_DAYS[wd] + ', ' + DC_MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' — ' + typeName + '</p>';
+  // Tue–Fri 8–10 AM rule (§12)
+  var inBlock = wd >= 2 && wd <= 5 && mins >= 480 && mins < 600;
+  if(inBlock && type !== 'trapping') h += flagRow('warn', 'Blocked window — Tue–Fri 8:00–10:00 AM.', 'Do not schedule anything Tuesday–Friday between 8–10 AM unless it is a Trapping Service (§12). Move this visit or pick a different time.');
+  else if(inBlock) h += flagRow('ok', 'Tue–Fri 8:00–10:00 AM — OK for Trapping.', 'Trapping Services are the one exception to the Tue–Fri 8–10 AM scheduling block (§12).');
+  else h += flagRow('ok', 'Outside the restricted window.', 'The Tue–Fri 8:00–10:00 AM block does not apply to this date and time (§12).');
+  // Bat blackout (§9.1)
+  var blackout = md >= 501 && md <= 701;
+  if(blackout && (type === 'bat' || type === 'exclusion')){
+    h += flagRow('warn', 'BAT BLACKOUT — Jun 1 to Aug 1: NO bat exclusion.', 'Females give birth to flightless pups that cannot leave the structure; exclusion in this window is illegal &amp; inhumane (§9.1). Do not book this job in the blackout.');
+  } else if(blackout){
+    h += flagRow('info', 'Inside the bat blackout (Jun 1 – Aug 1).', 'The blackout only blocks Bat work and Exclusion jobs — it does not affect this job type (§9.1).');
+  } else if(type === 'bat' || type === 'exclusion'){
+    h += flagRow('ok', 'Outside the bat blackout.', 'Bat exclusion blackout runs Jun 1 – Aug 1 (§9.1).');
+  }
+  if(type === 'bat' && md >= 301 && md <= 431){
+    h += flagRow('info', 'Spring BCV rule (Apr 1 – May 31).', 'BCV removal needs temperatures of 45°F or higher for 3 consecutive nights, to make sure the bats have left (§9.1).');
+  }
+  // Trapping start days (§8.8.1)
+  if(type === 'trapping'){
+    var pkg = document.getElementById('dc-pkg').value;
+    if(pkg === '2'){
+      if(wd === 6) h += flagRow('warn', '2-Visit trapping cannot start on a Saturday.', 'Trapping (2-Visit) can start any day except Saturday (§8.8.1).');
+      else h += flagRow('ok', '2-Visit trapping can start on a ' + DC_DAYS[wd] + '.', 'Trapping (2-Visit) can start any day except Saturday (§8.8.1).');
+    } else if(pkg === '3'){
+      if(wd === 5) h += flagRow('warn', '3-Visit trapping cannot start on a Friday.', 'Trapping (3-Visit) can start any day except Thursday/Friday (§8.8.1).');
+      else if(wd === 4) h += flagRow('warn', '3-Visit trapping starting Thursday — check coverage first.', 'Thursday is OK only if Saturday coverage is available (§8.8.1).');
+      else h += flagRow('ok', '3-Visit trapping can start on a ' + DC_DAYS[wd] + '.', 'Trapping (3-Visit) can start any day except Thursday/Friday (§8.8.1).');
+    } else {
+      if(wd === 1) h += flagRow('ok', '5-Visit trapping can start on a Monday.', 'Trapping (5-Visit) starts Monday and Tuesday only (§8.8.1).');
+      else if(wd === 2) h += flagRow('info', '5-Visit trapping starting Tuesday — check Saturday coverage.', 'A Tuesday start must have coverage for Saturday, or the cages will be closed on Friday (§8.8.1).');
+      else h += flagRow('warn', '5-Visit trapping cannot start on a ' + DC_DAYS[wd] + '.', 'Trapping (5-Visit) can start on Monday and Tuesday only (§8.8.1).');
+    }
+    if(wd === 4 || wd === 5){
+      h += flagRow('info', 'Weekend trapping note.', 'If trapping starts Thursday or Friday and runs through the weekend, traps close on Friday or Saturday and re-open Monday — and Monday does not count as a day (§8.8.1).');
+    }
+  }
+  // Time window template (§12)
+  var win = null;
+  if(mins >= 480 && mins < 660) win = 'Morning — 8 AM–11 AM';
+  else if(mins >= 660 && mins < 840) win = 'Mid-Day — 11 AM–2 PM';
+  else if(mins >= 840 && mins < 1020) win = 'Afternoon — 2 PM–5 PM';
+  if(win) h += flagRow('info', 'Time window template: ' + win + '.', 'Add this Time Window to the job, and tell the client there is a 3-hour arrival window (§12).');
+  else h += flagRow('info', 'Outside the standard time-window templates.', 'Templates are Morning 8 AM–11 AM, Mid-Day 11 AM–2 PM and Afternoon 2 PM–5 PM — create a custom time window instead, and tell the client there is a 3-hour arrival window (§12).');
+  out.innerHTML = h + '</div>';
+}
+
+var TOOL_RENDER = {
+  tick: renderTickTool,
+  termite: function(){ renderTermiteTool(); },
+  bee: function(){ resetBee(); renderBeeTool(); },
+  quote: renderQuoteTool,
+  plan: renderPlanTool,
+  intake: function(){ resetIntake(); renderIntakeTool(); },
+  date: renderDateTool
+};
 
 renderTiles();
 route();
