@@ -266,6 +266,8 @@
   .seg .opt-btn b{display:block}
   .ask-list{margin:0 0 16px;padding-left:22px}
   .ask-list li{margin-bottom:9px;font-size:16.5px}
+  .ask-list .ib-t{font-weight:600}
+  .ask-list .ck-note{display:block;font-size:13.8px;color:var(--ink-2);font-weight:400;margin-top:1px}
   .wiz-step{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin:0 0 6px}
   .wiz-nav{display:flex;gap:8px;margin-top:14px}
   .wiz-nav .big-btn{flex:1}
@@ -1303,18 +1305,15 @@ function planUpdate(){
 /* ---------- TOOL 6: New Lead Intake Script (New Lead Script & Flow + SOP §2.1–2.5, one combined flow) ---------- */
 var intake = null;
 var INTAKE_TOTAL = 12;
-function resetIntake(){ intake = { step:1, checks:{}, triage:null }; }
-function intakeCheckRow(id, label, note){
-  var on = !!intake.checks[id];
-  return '<button class="check-row' + (on ? ' done' : '') + '" type="button" data-icheck="' + id + '">'
-    + '<span class="box">' + icon('checkSm') + '</span>'
-    + '<span><span class="ct">' + label + '</span>' + (note ? '<span class="ck-note">' + note + '</span>' : '') + '</span></button>';
+function resetIntake(){ intake = { step:1, triage:null }; }
+function intakeBullet(label, note){
+  return '<li><span class="ib-t">' + label + '</span>' + (note ? '<span class="ck-note">' + note + '</span>' : '') + '</li>';
 }
 function sayScript(text){
   return '<div class="script"><span class="script-lbl">Say</span><p>&ldquo;' + text + '&rdquo;</p></div>';
 }
 function leadSrc(){ return '<p class="ref-line">Source: New Lead Script &amp; Flow</p>'; }
-function sopCollect(){ return '<p class="qsub" style="margin-top:18px">From the SOP (§2.1) — tap as you collect it:</p>'; }
+function sopCollect(){ return '<p class="qsub" style="margin-top:18px">From the SOP (§2.1):</p>'; }
 function intakeStepBody(s){
   if(s === 1){
     return '<h3>Opening</h3>'
@@ -1330,7 +1329,7 @@ function intakeStepBody(s){
       + '<p>If already provided:</p>'
       + sayScript('I have your name as [repeat name]. Is that correct?')
       + sopCollect()
-      + intakeCheckRow('name', 'Full name', 'Verify the exact spelling.')
+      + '<ul class="ask-list">' + intakeBullet('Full name', 'Verify the exact spelling.') + '</ul>'
       + leadSrc()
       + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
   }
@@ -1339,7 +1338,7 @@ function intakeStepBody(s){
       + sayScript('What is your address?')
       + '<p>Enter the address into the Lead record.</p>'
       + sopCollect()
-      + intakeCheckRow('addr', 'Complete property address', '')
+      + '<ul class="ask-list">' + intakeBullet('Complete property address', '') + '</ul>'
       + leadSrc()
       + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
   }
@@ -1348,7 +1347,7 @@ function intakeStepBody(s){
       + sayScript('What is the best phone number to reach you? Is that a mobile number?')
       + '<p>Enter the phone number and select the correct telephone type.</p>'
       + sopCollect()
-      + intakeCheckRow('mobile', 'Primary mobile phone', 'Required for automated text notifications.')
+      + '<ul class="ask-list">' + intakeBullet('Primary mobile phone', 'Required for automated text notifications.') + '</ul>'
       + leadSrc()
       + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
   }
@@ -1356,7 +1355,7 @@ function intakeStepBody(s){
     return '<h3>4. Email address</h3>'
       + sayScript('What is a good email address for estimates and appointment reminders.')
       + sopCollect()
-      + intakeCheckRow('email', 'Email address', 'Required for paperless invoicing and estimates.')
+      + '<ul class="ask-list">' + intakeBullet('Email address', 'Required for paperless invoicing and estimates.') + '</ul>'
       + leadSrc()
       + refBlock(2, '2.1', '2.1 Client Intake Procedures', '§2.1 — Client Intake Procedures');
   }
@@ -1365,7 +1364,7 @@ function intakeStepBody(s){
       + sayScript('(How did you hear about us?)')
       + '<p>Select the most accurate source. If an existing client referred them, get the name.</p>'
       + sopCollect()
-      + intakeCheckRow('source', 'Lead source', 'Create the Lead Source on the profile.')
+      + '<ul class="ask-list">' + intakeBullet('Lead source', 'Create the Lead Source on the profile.') + '</ul>'
       + leadSrc()
       + '<h3 style="margin-top:22px">Add a secondary contact?</h3>'
       + '<div class="script"><span class="script-lbl">Ask — use as written</span><p>&ldquo;Would you like me to add another person to the account today, such as a spouse, partner, or tenant?&rdquo;</p></div>'
@@ -1386,12 +1385,14 @@ function intakeStepBody(s){
       + '<li>Are there any other pest or wildlife concerns we should know about?</li></ul>'
       + leadSrc()
       + '<h3 style="margin-top:22px">From the SOP — discovery &amp; property questions</h3>'
-      + '<p class="qsub">Ask these on every call. Listen to the client&rsquo;s concerns and log detailed notes as they explain. Tap each one as you cover it.</p>'
-      + intakeCheckRow('q1', '1. What is going on?', '')
-      + intakeCheckRow('q2', '2. What pest or animal do you think you have?', '')
-      + intakeCheckRow('q3', '3. What time of day do you hear the noise?', '')
-      + intakeCheckRow('q4', '4. What specific activity are you seeing?', '')
-      + intakeCheckRow('q5', '5. How tall is your home?', 'Decides if a 2-person ladder crew is necessary.')
+      + '<p class="qsub">Ask these on every call. Listen to the client&rsquo;s concerns and log detailed notes as they explain.</p>'
+      + '<ul class="ask-list">'
+      + intakeBullet('1. What is going on?', '')
+      + intakeBullet('2. What pest or animal do you think you have?', '')
+      + intakeBullet('3. What time of day do you hear the noise?', '')
+      + intakeBullet('4. What specific activity are you seeing?', '')
+      + intakeBullet('5. How tall is your home?', 'Decides if a 2-person ladder crew is necessary.')
+      + '</ul>'
       + refBlock(2, '2.3', '2.3 Visit Type Triage', '§2.3 — Visit Type Triage');
   }
   if(s === 8){
@@ -1439,10 +1440,12 @@ function intakeStepBody(s){
       + leadSrc()
       + refBlock(2, '2.5', '2.5 Credit Card Collection', '§2.5 — Credit Card Collection');
   }
-  return '<h3>After the call</h3><p class="qsub">Tap each one as you complete it.</p>'
-    + intakeCheckRow('after-tax', 'Make sure Sales tax is recorded.', 'Open locations tab, select address and add bottom middle of screen. Either WC for Westchester, Bronx, CT, PC (Putnam County), RC (Rockland County), YKS (Yonkers), etc.')
-    + intakeCheckRow('after-inv', 'Make Sure Job has an attached Invoice', 'Correct invoice amount for service location, $100 more for counties other than Westchester.')
-    + intakeCheckRow('after-conf', 'Confirm the appointment date, time on the schedule and correct technician.', '')
+  return '<h3>After the call</h3>'
+    + '<ul class="ask-list">'
+    + intakeBullet('Make sure Sales tax is recorded.', 'Open locations tab, select address and add bottom middle of screen. Either WC for Westchester, Bronx, CT, PC (Putnam County), RC (Rockland County), YKS (Yonkers), etc.')
+    + intakeBullet('Make Sure Job has an attached Invoice', 'Correct invoice amount for service location, $100 more for counties other than Westchester.')
+    + intakeBullet('Confirm the appointment date, time on the schedule and correct technician.', '')
+    + '</ul>'
     + leadSrc();
 }
 function renderIntakeTool(){
@@ -1462,13 +1465,6 @@ function renderIntakeTool(){
   el.innerHTML = h;
   bindGoto(el);
   bindRestart(el, function(){ resetIntake(); renderIntakeTool(); });
-  Array.prototype.forEach.call(el.querySelectorAll('[data-icheck]'), function(btn){
-    btn.addEventListener('click', function(){
-      var k = btn.getAttribute('data-icheck');
-      if(intake.checks[k]) delete intake.checks[k]; else intake.checks[k] = true;
-      renderIntakeTool();
-    });
-  });
   Array.prototype.forEach.call(el.querySelectorAll('[data-triage]'), function(btn){
     btn.addEventListener('click', function(){ intake.triage = btn.getAttribute('data-triage'); renderIntakeTool(); });
   });
