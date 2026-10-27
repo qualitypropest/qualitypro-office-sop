@@ -332,6 +332,11 @@
   .daily-reader .daily-list ul ul{margin:5px 0 3px;padding-left:20px}
   .steps-list{margin:0 0 6px;padding-left:22px}
   .steps-list li{margin-bottom:8px;font-size:16px}
+  .sa-inline{border:1.5px solid var(--line);border-radius:12px;padding:14px 15px;margin:14px 0 4px;background:var(--surface-2)}
+  .sa-inline .sa-inline-t{font-weight:700;font-size:17px;margin:0 0 3px;line-height:1.25}
+  .sa-inline .fld{margin-bottom:10px}
+  .sa-inline .fld input{background:var(--surface)}
+  .sa-inline .result-box,.sa-inline .warn-box,.sa-inline .rodent-alert{background:var(--surface)}
 </style>
 </head>
 <body>
@@ -1551,13 +1556,10 @@ function renderAreaTool(){
   document.getElementById('sa-check').addEventListener('click', saCheck);
   input.focus();
 }
-function saCheck(){
-  var out = document.getElementById('sa-out');
-  var raw = document.getElementById('sa-in').value || '';
-  var m = raw.match(/\b(\d{5})(?:-\d{4})?\b/);
+function saVerdictHTML(raw, isIntake){
+  var m = String(raw || '').match(/\b(\d{5})(?:-\d{4})?\b/);
   if(!m){
-    out.innerHTML = '<p style="margin:14px 0 0;color:var(--ink-2)">No 5-digit ZIP found yet &mdash; enter the property address or ZIP.</p>';
-    return;
+    return '<p style="margin:14px 0 0;color:var(--ink-2)">No 5-digit ZIP found yet &mdash; enter the property address or ZIP.</p>';
   }
   var zip = m[1];
   var h = '';
@@ -1569,7 +1571,9 @@ function saCheck(){
       + '<p style="margin:10px 0 0;font-size:17px"><b>' + esc(region) + '</b> &mdash; '
       + (fee === 0 ? 'core area, <b>$0 surcharge</b>.' : '<b>+$100 surcharge</b> added to all services for this region (&sect;3.6).')
       + '</p>'
-      + '<p style="margin:8px 0 0">Continue with the normal intake and booking.</p>'
+      + (isIntake
+          ? '<p style="margin:8px 0 0">In our service area &mdash; <b>continue with intake. The client&rsquo;s name is next</b> &mdash; select Next below.</p>'
+          : '<p style="margin:8px 0 0">Continue with the normal intake and booking.</p>')
       + '</div>';
   } else if(SA_BORDER[zip]){
     var b = SA_BORDER[zip], rg = SA_REGIONS[b.region];
@@ -1592,6 +1596,23 @@ function saCheck(){
       + '</div>'
       + saBatonHTML();
   }
+  return h;
+}
+function saCheck(){
+  var out = document.getElementById('sa-out');
+  if(!out) return;
+  var raw = document.getElementById('sa-in').value || '';
+  out.innerHTML = saVerdictHTML(raw, false);
+  bindGoto(out);
+}
+function inSaCheck(){
+  var input = document.getElementById('in-sa-in');
+  var out = document.getElementById('in-sa-out');
+  if(!input || !out) return;
+  var raw = input.value || '';
+  if(intake){ intake.saInput = raw; }
+  var h = saVerdictHTML(raw, true);
+  if(intake){ intake.saHTML = h; }
   out.innerHTML = h;
   bindGoto(out);
 }
@@ -1599,7 +1620,7 @@ function saCheck(){
 /* ---------- TOOL 7: New Lead Intake Script (New Lead Script & Flow + SOP §2.1–2.5, one combined flow) ---------- */
 var intake = null;
 var INTAKE_TOTAL = 12;
-function resetIntake(){ intake = { step:1, triage:null }; }
+function resetIntake(){ intake = { step:1, triage:null, saInput:'', saHTML:'' }; }
 function intakeBullet(label, note){
   return '<li><span class="ib-t">' + label + '</span>' + (note ? '<span class="ck-note">' + note + '</span>' : '') + '</li>';
 }
@@ -1608,6 +1629,15 @@ function sayScript(text){
 }
 function leadSrc(){ return '<p class="ref-line">Source: New Lead Script &amp; Flow</p>'; }
 function sopCollect(){ return '<p class="qsub" style="margin-top:18px">From the SOP (§2.1):</p>'; }
+function intakeSaCheckerHTML(){
+  var val = (intake && intake.saInput) ? esc(intake.saInput) : '';
+  var saved = (intake && intake.saHTML) ? intake.saHTML : '<p style="margin:14px 0 0;color:var(--ink-2)">The verdict appears here as soon as a 5-digit ZIP is entered.</p>';
+  return '<div class="sa-inline"><p class="sa-inline-t">Service Area Checker &mdash; check this address now</p>'
+    + '<p class="qsub" style="margin:0 0 10px">Type or paste the client&rsquo;s full property address or just the ZIP right here &mdash; you do not need to leave intake. The checker pulls the 5-digit ZIP out and checks it against the &sect;3.6 service area.</p>'
+    + '<label class="fld"><span>Property address / ZIP</span><input id="in-sa-in" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 123 Main St, Brewster, NY 10509" value="' + val + '" /></label>'
+    + '<button class="big-btn" type="button" id="in-sa-check">Check service area</button>'
+    + '<div id="in-sa-out">' + saved + '</div></div>';
+}
 function intakeStepBody(s){
   if(s === 1){
     return '<h3>Opening</h3>'
@@ -1621,12 +1651,13 @@ function intakeStepBody(s){
     return '<h3>1. Property address &mdash; check the service area first</h3>'
       + sayScript('May I have the address of the property? I ask for the address first so I can make sure we service your area.')
       + '<p>Enter the address into the Lead record, then check it against our service area before going any further.</p>'
+      + intakeSaCheckerHTML()
       + '<h3 style="margin-top:22px">Service-area check</h3>'
       + '<ul class="ask-list">'
       + intakeBullet('Complete property address', 'Enter it in full on the Lead record.')
       + intakeBullet('Our service area (§3.6)', 'Westchester County; Yonkers; Bronx north of Interstate 95; Connecticut from the Westchester border up to I-84 and Route 7; Putnam County south of I-84 to Route 292 / S. Quaker Hill Rd; Rockland County eastern towns along the river.')
       + intakeBullet('In our service area', 'Continue with the rest of intake &mdash; the client&rsquo;s name is next.')
-      + intakeBullet('Not sure about the ZIP?', 'Verify it with the Service Area Checker tool (Tools &amp; Wizards) &mdash; it checks the ZIP against the &sect;3.6 service area and flags borderline ZIPs.')
+      + intakeBullet('Not sure about the ZIP?', 'Use the Service Area Checker above in this step &mdash; it checks the ZIP against the &sect;3.6 service area and flags borderline ZIPs. The same checker is also in Tools &amp; Wizards.')
       + '</ul>'
       + '<div class="baton-call"><p class="bc-l">Not in our service area &mdash; do not continue the regular intake</p>'
       + '<div class="bc-n">Baton &mdash; <a href="tel:+18556505428">855-650-5428</a></div>'
@@ -1772,6 +1803,14 @@ function renderIntakeTool(){
   Array.prototype.forEach.call(el.querySelectorAll('[data-triage]'), function(btn){
     btn.addEventListener('click', function(){ intake.triage = btn.getAttribute('data-triage'); renderIntakeTool(); });
   });
+  var inSaIn = document.getElementById('in-sa-in');
+  if(inSaIn){
+    inSaIn.addEventListener('input', inSaCheck);
+    inSaIn.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); inSaCheck(); } });
+    document.getElementById('in-sa-check').addEventListener('click', inSaCheck);
+    var inSaOut = document.getElementById('in-sa-out');
+    if(inSaOut) bindGoto(inSaOut);
+  }
   document.getElementById('in-back').addEventListener('click', function(){
     if(intake.step > 1){ intake.step--; renderIntakeTool(); }
     else { location.hash = '#/tools'; }
