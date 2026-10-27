@@ -309,6 +309,11 @@
   .rodent-line{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2);font-size:15.5px;margin-top:14px}
   .check-row .ck-note{display:block;font-size:13.8px;color:var(--ink-2);font-weight:400;margin-top:1px}
 
+  /* ---------- plan pricing schedule tool ---------- */
+  #pp-sched tr.hl td{background:var(--red-soft)}
+  #pp-sched td.sel{font-weight:700;color:var(--red)}
+  .pp-cmp-lbl{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:16px 0 2px}
+
   /* ---------- daily to do — one uniform list style ---------- */
   .daily-card .check-row .ct{font-family:inherit;font-size:16.5px;font-weight:600;line-height:1.4}
   .daily-reader .daily-list li{font-family:inherit;font-size:16.5px;font-weight:400;line-height:1.5}
@@ -361,7 +366,7 @@
     <button class="quick-strip tools" id="tools-open" type="button">
       <span>
         <span class="qs-t">Tools &amp; Wizards</span>
-        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; plan finder &bull; intake call flow</span>
+        <span class="qs-s" style="display:block">Price calculators &bull; bee/wasp wizard &bull; plan finder &bull; plan pricing &bull; intake call flow</span>
       </span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
     </button>
@@ -874,6 +879,7 @@ var TOOLS = [
   { id:'termite', name:'Termite Calculator',       sub:'Install, spot, trench & rod, slab — plus takeover, maintenance and bundle splits.', ref:'§8.6', icon:'calc' },
   { id:'bee',     name:'Bee / Wasp Booking Wizard', sub:'Ask the five questions, tap the answers — Standard $345 or Advanced $425.', ref:'§3.7', icon:'wand' },
   { id:'plan',    name:'Plan Finder',              sub:'Tap the pests the client has — get the lowest plan that covers them all.', ref:'§8.2–8.4', icon:'wand' },
+  { id:'pricing', name:'Plan Pricing Schedule',    sub:'Pick Silver, Gold or Platinum, enter the home size, choose Monthly or Quarterly — get the price per month.', ref:'§8.1', icon:'calc' },
   { id:'intake',  name:'New Lead Intake Script',   sub:'One combined flow for a new-lead call — the New Lead Script word for word, with the SOP intake steps woven in.', ref:'§2.1–2.5', icon:'phone' }
 ];
 var currentTool = null;
@@ -1249,7 +1255,141 @@ function planUpdate(){
     + '</div>';
 }
 
-/* ---------- TOOL 6: New Lead Intake Script (New Lead Script & Flow + SOP §2.1–2.5, one combined flow) ---------- */
+/* ---------- TOOL 6: Plan Pricing Schedule (§8.1) ---------- */
+/* §8.1 Plan Price Schedule — all prices are PER MONTH. Quarterly plans are
+   serviced every 3 months. Base tier is 1,000–1,999 sq ft; Monthly adds $20
+   and Quarterly adds $10 for each additional 1,000 sq ft tier, continuing
+   past the printed 9,000–9,999 row. Homes under 1,000 sq ft price at the
+   base tier. */
+var PP_PLANS = [
+  { id:'silver',   name:'Silver',   tag:'Essential',     monthly:99,  quarterly:65 },
+  { id:'gold',     name:'Gold',     tag:'Comprehensive', monthly:119, quarterly:75 },
+  { id:'platinum', name:'Platinum', tag:'Premium Elite', monthly:139, quarterly:95 }
+];
+var PP_STEP = { monthly:20, quarterly:10 };
+var ppState = { plan:'silver', freq:'monthly' };
+function ppPlan(id){
+  for(var i = 0; i < PP_PLANS.length; i++) if(PP_PLANS[i].id === id) return PP_PLANS[i];
+  return PP_PLANS[0];
+}
+function ppTier(sqft){
+  if(sqft < 1000) return 0;
+  return Math.floor(sqft / 1000) - 1;
+}
+function ppTierLabel(tier){
+  var lo = 1000 + tier * 1000, hi = lo + 999;
+  return lo.toLocaleString('en-US') + '–' + hi.toLocaleString('en-US') + ' sq ft';
+}
+function ppPrice(plan, freq, tier){
+  return plan[freq] + PP_STEP[freq] * tier;
+}
+function ppScheduleRows(){
+  var rows = [['Home size (sq. ft.)', 'Monthly', 'Quarterly', 'Monthly', 'Quarterly', 'Monthly', 'Quarterly']];
+  for(var t = 0; t < 9; t++){
+    var r = [ppTierLabel(t)];
+    PP_PLANS.forEach(function(p){
+      r.push('$' + ppPrice(p, 'monthly', t));
+      r.push('$' + ppPrice(p, 'quarterly', t));
+    });
+    rows.push(r);
+  }
+  return rows;
+}
+function renderPlanPriceTool(){
+  var el = toolBody();
+  var h = '<div class="qcard"><h3>Get the price</h3>'
+    + '<p class="qsub">All prices are <b>per month</b>. Quarterly plans are billed monthly and serviced every 3 months. The price updates as you pick and type.</p>'
+    + '<p class="grp-lbl" style="margin-top:0">Plan type</p><div class="seg" role="group" aria-label="Plan type">';
+  PP_PLANS.forEach(function(p){
+    h += '<button class="opt-btn' + (ppState.plan === p.id ? ' sel' : '') + '" type="button" data-pp-plan="' + p.id + '"><b>' + p.name + '</b><span class="ob-s">' + p.tag + '</span></button>';
+  });
+  h += '</div>'
+    + '<p class="grp-lbl">Service frequency</p><div class="seg" role="group" aria-label="Service frequency">'
+    + '<button class="opt-btn' + (ppState.freq === 'monthly' ? ' sel' : '') + '" type="button" data-pp-freq="monthly"><b>Monthly</b><span class="ob-s">Service every month</span></button>'
+    + '<button class="opt-btn' + (ppState.freq === 'quarterly' ? ' sel' : '') + '" type="button" data-pp-freq="quarterly"><b>Quarterly</b><span class="ob-s">Service every 3 months</span></button>'
+    + '</div>'
+    + '<label class="fld"><span>Size of home (sq ft)</span><input id="pp-sqft" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 2450" /></label>'
+    + '<div id="pp-out"></div>'
+    + startOverBtn()
+    + refBlock(8, '8.1', '8.1 Plan Price Schedule', '§8.1 — Plan Price Schedule')
+    + '</div>'
+    + '<div class="qcard"><h3>Full price schedule</h3>'
+    + '<p class="qsub">The complete §8.1 schedule — price per month by home size. Your plan, frequency and size above are highlighted.</p>'
+    + '<div id="pp-sched">' + tableHTML(ppScheduleRows(), ['', 'Silver', 'Gold', 'Platinum']) + '</div>'
+    + '<p style="margin:12px 0 0">Above 9,999 sq ft the price keeps stepping: <b>+$20 per month</b> on Monthly plans and <b>+$10 per month</b> on Quarterly plans for each additional 1,000 sq ft. Homes under 1,000 sq ft price at the 1,000–1,999 row.</p>'
+    + refBlock(8, '8.1', '8.1 Plan Price Schedule', '§8.1 — Plan Price Schedule')
+    + '</div>';
+  el.innerHTML = h;
+  bindGoto(el);
+  bindRestart(el, function(){ ppState = { plan:'silver', freq:'monthly' }; renderPlanPriceTool(); });
+  Array.prototype.forEach.call(el.querySelectorAll('[data-pp-plan]'), function(btn){
+    btn.addEventListener('click', function(){
+      ppState.plan = btn.getAttribute('data-pp-plan');
+      Array.prototype.forEach.call(el.querySelectorAll('[data-pp-plan]'), function(b){ b.classList.toggle('sel', b === btn); });
+      planPriceUpdate();
+    });
+  });
+  Array.prototype.forEach.call(el.querySelectorAll('[data-pp-freq]'), function(btn){
+    btn.addEventListener('click', function(){
+      ppState.freq = btn.getAttribute('data-pp-freq');
+      Array.prototype.forEach.call(el.querySelectorAll('[data-pp-freq]'), function(b){ b.classList.toggle('sel', b === btn); });
+      planPriceUpdate();
+    });
+  });
+  document.getElementById('pp-sqft').addEventListener('input', planPriceUpdate);
+  planPriceUpdate();
+}
+function planPriceUpdate(){
+  var out = document.getElementById('pp-out');
+  if(!out) return;
+  var plan = ppPlan(ppState.plan);
+  var freq = ppState.freq;
+  var otherFreq = freq === 'monthly' ? 'quarterly' : 'monthly';
+  var planIdx = PP_PLANS.indexOf(plan);
+  var colIdx = 1 + planIdx * 2 + (freq === 'quarterly' ? 1 : 0);
+  var sqft = numVal('pp-sqft');
+  var tier = (sqft === null || sqft <= 0) ? -1 : ppTier(sqft);
+  // Highlight the matching row + price cell in the full schedule.
+  var sched = document.getElementById('pp-sched');
+  if(sched){
+    Array.prototype.forEach.call(sched.querySelectorAll('tbody tr'), function(tr, ri){
+      tr.classList.toggle('hl', tier >= 0 && tier <= 8 && ri === tier);
+      Array.prototype.forEach.call(tr.querySelectorAll('td'), function(td, ci){
+        td.classList.toggle('sel', ci === colIdx);
+      });
+    });
+  }
+  if(tier < 0){
+    out.innerHTML = '<p style="margin:0;color:var(--ink-2)">Enter the size of the home to see the ' + plan.name + ' ' + (freq === 'monthly' ? 'Monthly' : 'Quarterly') + ' price.</p>';
+    return;
+  }
+  var price = ppPrice(plan, freq, tier);
+  var base = plan[freq], step = PP_STEP[freq];
+  var freqName = freq === 'monthly' ? 'Monthly' : 'Quarterly';
+  var otherName = otherFreq === 'monthly' ? 'Monthly' : 'Quarterly';
+  var h = '<div class="result-box">'
+    + '<p class="ref-line" style="margin:0 0 6px">' + plan.name + ' &middot; ' + freqName + ' service &mdash; ' + sqft.toLocaleString('en-US') + ' sq ft &rarr; ' + ppTierLabel(tier) + ' tier</p>'
+    + '<div class="price-big">' + money(price) + '<span style="font-size:22px">/month</span></div>'
+    + '<p style="margin:8px 0 0">' + money(base) + ' base (1,000–1,999 sq ft)'
+    + (tier > 0 ? ' + ' + money(step) + ' &times; ' + tier + ' additional 1,000 sq ft tier' + (tier === 1 ? '' : 's') : ' — base tier, no size add-on')
+    + ' = <b>' + money(price) + ' per month</b></p>'
+    + (sqft < 1000 ? '<p style="margin:8px 0 0">Homes under 1,000 sq ft price at the 1,000–1,999 sq ft tier.</p>' : '')
+    + (tier > 8 ? '<p style="margin:8px 0 0">Above the printed 9,000–9,999 sq ft row — the §8.1 step (+' + money(step) + ' per additional 1,000 sq ft) has been applied.</p>' : '')
+    + '<p style="margin:8px 0 0">' + (freq === 'monthly'
+        ? 'Billed monthly — service every month. That is <b>' + money(price * 12) + ' per year</b>.'
+        : 'Billed monthly — service every 3 months (4 visits a year). That is <b>' + money(price * 12) + ' per year</b>.')
+    + '</p>'
+    + '<p class="pp-cmp-lbl">All plans at this size — ' + freqName + '</p>';
+  PP_PLANS.forEach(function(p){
+    h += '<div class="price-row"><span class="pr-l">' + p.name + (p.id === plan.id ? ' — selected' : '') + '</span><span class="pr-v">' + money(ppPrice(p, freq, tier)) + '<span style="font-size:16px">/mo</span></span></div>';
+  });
+  h += '<p class="pp-cmp-lbl">Same plan, other frequency</p>'
+    + '<div class="price-row"><span class="pr-l">' + plan.name + ' — ' + otherName + '</span><span class="pr-v">' + money(ppPrice(plan, otherFreq, tier)) + '<span style="font-size:16px">/mo</span></span></div>'
+    + '</div>';
+  out.innerHTML = h;
+}
+
+/* ---------- TOOL 7: New Lead Intake Script (New Lead Script & Flow + SOP §2.1–2.5, one combined flow) ---------- */
 var intake = null;
 var INTAKE_TOTAL = 12;
 function resetIntake(){ intake = { step:1, triage:null }; }
@@ -1431,6 +1571,7 @@ var TOOL_RENDER = {
   termite: function(){ renderTermiteTool(); },
   bee: function(){ resetBee(); renderBeeTool(); },
   plan: renderPlanTool,
+  pricing: renderPlanPriceTool,
   intake: function(){ resetIntake(); renderIntakeTool(); }
 };
 
