@@ -808,7 +808,7 @@ function renderQuick(){
       + '<div class="pl">Covered pests</div><p>'+esc(p.covered.replace(/^Covered Pests:\s*/, ''))+'</p>'
       + '<div class="pl">Plan perk</div><p>'+esc(p.perk.replace(/^Plan Perks?:\s*/, ''))+'</p></div>';
   });
-  h += '</div>' + srcLink(8, '8.1', '8.1 Plan Price Schedule') + srcLink(8, '8.2', '8.2–8.4 Service Plans') + '</div>';
+  h += '</div>' + srcLink(8, '8.1', '8.1 Plan Price Schedule') + srcLink(8, '8.2', '8.2–8.4 Service Plans') + '<p class="src"><button type="button" data-open-tool="pricing">Open the Plan Pricing Tool \u2192</button></p>' + '</div>';
 
   // Termite
   h += '<div class="qcard"><h3>Termite Pricing</h3><p class="qsub">Master termite pricing &amp; coverage matrix.</p>'
@@ -866,6 +866,11 @@ function renderQuick(){
       var parts = btn.getAttribute('data-goto').split('/');
       state.highlight = '';
       location.hash = '#/c/'+parts[0]+'/s/'+parts[1];
+    });
+  });
+  Array.prototype.forEach.call(el.querySelectorAll('[data-open-tool]'), function(btn){
+    btn.addEventListener('click', function(){
+      location.hash = '#/tool/'+btn.getAttribute('data-open-tool');
     });
   });
   show('quick');
