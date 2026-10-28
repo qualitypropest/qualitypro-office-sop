@@ -1965,15 +1965,6 @@ function commItem(id){
 function commRuleHTML(){
   return '<div class="comm-ex"><p><b>The rule —</b> When a client calls in for a service, that service is <b>not</b> commissionable — except for <b>Inspection</b>, <b>Rodent Service</b> or <b>Plan</b> sales over the phone. Anything else only earns commission as a <b>cross-sell while on the phone</b> — the office brings it up and sells it, beyond what the client called in for.</p><p><b>Not commissionable after an inspection:</b> any sale that comes after or out of an inspection is <b>not</b> commissionable for the office — whatever the item. If the work was already inspected and the office is just sending or processing the resulting estimate, it is not the office’s sale.</p></div>';
 }
-function commExampleHTML(){
-  return '<div class="comm-ex"><p><b>Example —</b> Client calls to get price on Tick &amp; Mosquito Service: is this commissionable? <b>NO.</b> If the client calls to get Tick &amp; Mosquito service and you upsell them a Plan, yes — the plan is commissionable, and a plan pays a flat <b>$20</b>.</p></div>';
-}
-function commPlanExampleHTML(){
-  return '<div class="comm-ex"><p><b>Example —</b> Client calls about plan.. gets plan signed $20. By the way — any issues with deer, mosquitos, stink bugs, termites, etc.? Anything cross-sold on that same call adds its own 5% commission on top of the $20.</p></div>';
-}
-function commRodentSeqExampleHTML(){
-  return '<div class="comm-ex"><p><b>Example —</b> If plan is requested by caller and they have issue with mice/rodents, staff is to upsell to a 4 visit rodent service, which would be commissionable. Then once rodent service complete and they sign plan, the $20 commission gets added.</p></div>';
-}
 function commKeepSellingHTML(){
   return '<div class="comm-ex"><p><b>Keep selling — by the way…</b> The plan is signed, so before you hang up, ask about the cross-sell items too — anything sold adds its own <b>5%</b> commission on top of the $20:</p>'
     + '<p>• Deer — “Are deer affecting your landscaping or ornamental plants?” (Deer Repellent)</p>'
@@ -1982,15 +1973,6 @@ function commKeepSellingHTML(){
     + '<p>• Termites — “Do you currently have termite protection in place?” (Termite Installation)</p>'
     + '<p>• “Do you have a termite system? We can transfer that so it is one stop shop — I can send an estimate for that.” (Termite Transfer)</p>'
     + '<p>• Warranty Renewal — is their warranty due for renewal?</p></div>';
-}
-function commTermiteExampleHTML(){
-  return '<div class="comm-ex"><p><b>Example —</b> Client calls for Termite inspection and after termite inspection complete office sends termite estimate. This is NOT commissionable.</p></div>';
-}
-function commPestExampleHTML(){
-  return '<div class="comm-ex"><p><b>Example —</b> If client calls for Pest Control and we say oh by the way, are you protected against termites?? We can send an estimate. YES this is commissionable.</p></div>';
-}
-function commBeeExampleHTML(){
-  return '<div class="comm-ex"><p><b>Example —</b> Someone calling for Bee’s — the cross-sell/upsell would be a plan (Quarterly/Monthly).</p></div>';
 }
 function commCrossListHTML(){
   var rows = [
@@ -2011,6 +1993,23 @@ function commCrossListHTML(){
   });
   h += '</div>';
   return h;
+}
+function commVerdictSummaryHTML(){
+  return '<div class="qcard" style="margin-top:14px"><h3>Verdict summary</h3>'
+    + '<p class="qsub">The outcomes this tool can reach — at a glance. See \u00a710.2 Commissions and \u00a710.3 Outreach.</p>'
+    + '<p style="margin:10px 0 4px"><b>Commissionable for the office</b></p><ul class="steps-list">'
+    + '<li>Inspection (5%), Rodent Service (5% — when the client approves before any inspection), or a Plan ($20 flat) sold over the phone.</li>'
+    + '<li>Cross-sells the office brings up on the call at 5%: Deer Repellent, Termite Installation, Termite Transfer, Stink Bug, Tick/Mosquito, Warranty Renewal — plus Initial/1-Time Service or Mosquito Stations as cross-sells.</li>'
+    + '<li>A stale estimate (over 30 days) closed after documented outreach — including Exclusion Estimate Outreach at 5%.</li></ul>'
+    + '<p style="margin:10px 0 4px"><b>Not commissionable for the office</b></p><ul class="steps-list">'
+    + '<li>Anything sold after / out of an inspection — general rule, whatever the item.</li>'
+    + '<li>A sale a technician recommended where the office only sent the estimate — the technician\u2019s sale.</li>'
+    + '<li>A reinstatement or a billing-frequency change.</li>'
+    + '<li>A stale estimate where the client came back on their own with no documented outreach — client-initiated.</li>'
+    + '<li>Whatever the client simply called in for, beyond the three phone-sale items above.</li></ul>'
+    + '<p style="margin:10px 0 4px"><b>Commissionable in two stages</b></p><ul class="steps-list">'
+    + '<li>Caller wants a plan but has mice/rodents: the 4 Visit Rodent Service earns 5% now; the $20 plan commission is added when the rodent service completes and they sign the plan.</li></ul>'
+    + '</div>';
 }
 function commBackHTML(){
   return '<div class="wiz-nav"><button class="big-btn ghost" type="button" id="comm-back">Back</button></div>';
@@ -2037,14 +2036,9 @@ function renderCommTool(){
       var sub = commPaySub(it);
       h += '<button class="opt-btn" type="button" data-called="' + it.id + '"><b>' + esc(it.name) + '</b>' + commNoteSpan(it) + (sub ? '<span class="ob-s">' + sub + '</span>' : '') + '</button>';
     });
-    h += commExampleHTML()
-      + commTermiteExampleHTML()
-      + commPestExampleHTML()
-      + commPlanExampleHTML()
-      + commRodentSeqExampleHTML()
-      + refBlock(10, '10.2', '10.2 Commissions', '§10.2 — Commissions')
+    h += refBlock(10, '10.2', '10.2 Commissions', '§10.2 — Commissions')
       + '</div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     bindGoto(el);
     Array.prototype.forEach.call(el.querySelectorAll('[data-called]'), function(btn){
       btn.addEventListener('click', function(){ comm.called = btn.getAttribute('data-called'); comm.step = 2; renderCommTool(); });
@@ -2065,9 +2059,8 @@ function renderCommTool(){
       var sub = commPaySub(it);
       h += '<button class="opt-btn" type="button" data-sold="' + it.id + '"><b>' + esc(it.name) + '</b>' + commNoteSpan(it) + (sub ? '<span class="ob-s">' + sub + '</span>' : '') + '</button>';
     });
-    h += commBeeExampleHTML()
-      + commBackHTML() + '</div>';
-    el.innerHTML = h;
+    h += commBackHTML() + '</div>';
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-sold]'), function(btn){
       btn.addEventListener('click', function(){ comm.sold = btn.getAttribute('data-sold'); comm.step = 3; renderCommTool(); });
     });
@@ -2079,7 +2072,7 @@ function renderCommTool(){
       + '<button class="opt-btn" type="button" data-reinstate="yes"><b>Yes</b><span class="ob-s">Existing client — reinstatement, or a billing-frequency change</span></button>'
       + '<button class="opt-btn" type="button" data-reinstate="no"><b>No</b></button>'
       + commBackHTML() + '</div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-reinstate]'), function(btn){
       btn.addEventListener('click', function(){
         if(btn.getAttribute('data-reinstate') === 'yes'){ comm.verdict = 'reinstate'; }
@@ -2105,7 +2098,7 @@ function renderCommTool(){
       h += '<button class="opt-btn" type="button" data-how="' + o[0] + '"><b>' + o[1] + '</b><span class="ob-s">' + o[2] + '</span></button>';
     });
     h += commBackHTML() + '</div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-how]'), function(btn){
       btn.addEventListener('click', function(){
         comm.how = btn.getAttribute('data-how');
@@ -2133,7 +2126,7 @@ function renderCommTool(){
       + '<button class="opt-btn" type="button" data-over30="yes"><b>Yes — over 30 days old</b></button>'
       + '<button class="opt-btn" type="button" data-over30="no"><b>No — 30 days old or less</b></button>'
       + commBackHTML() + '</div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-over30]'), function(btn){
       btn.addEventListener('click', function(){
         comm.over30 = btn.getAttribute('data-over30') === 'yes';
@@ -2151,7 +2144,7 @@ function renderCommTool(){
       + '<button class="opt-btn" type="button" data-outreach="yes"><b>Yes — documented outreach</b></button>'
       + '<button class="opt-btn" type="button" data-outreach="no"><b>No — the client came back on their own</b></button>'
       + commBackHTML() + '</div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-outreach]'), function(btn){
       btn.addEventListener('click', function(){
         comm.outreach = btn.getAttribute('data-outreach') === 'yes';
@@ -2168,7 +2161,7 @@ function renderCommTool(){
       + '<button class="opt-btn" type="button" data-rodent="yes"><b>Yes — mice/rodents too</b></button>'
       + '<button class="opt-btn" type="button" data-rodent="no"><b>No rodent issue</b></button>'
       + '<div class="wiz-nav"><button class="big-btn ghost" type="button" id="comm-back7">Back</button></div></div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-rodent]'), function(btn){
       btn.addEventListener('click', function(){
         comm.rodentIssue = btn.getAttribute('data-rodent') === 'yes';
@@ -2189,7 +2182,7 @@ function renderCommTool(){
       h += '<button class="opt-btn" type="button" data-fup="' + it.id + '"><b>' + esc(it.name) + '</b>' + commNoteSpan(it) + (sub ? '<span class="ob-s">' + sub + '</span>' : '') + '</button>';
     });
     h += '<div class="wiz-nav"><button class="big-btn ghost" type="button" id="comm-back8">Back</button></div></div>';
-    el.innerHTML = h;
+    el.innerHTML = h + commVerdictSummaryHTML();
     Array.prototype.forEach.call(el.querySelectorAll('[data-fup]'), function(btn){
       btn.addEventListener('click', function(){
         comm.sold = btn.getAttribute('data-fup');
@@ -2240,8 +2233,7 @@ function renderCommVerdict(el){
     head = 'Not commissionable for the office';
     body = '<p>The client called about <b>' + esc(called.name) + '</b>, asked for <b>' + esc(sold.name) + '</b>, and the office just sent the estimate — that is responding to the client’s request, not a sale.</p>'
       + '<p><b>§10.2 rule — Non Commissionable Scenarios:</b> “…this is not a commissionable sale, this is responding to the client’s request.”</p>'
-      + '<p><b>Reminder:</b> staff may not list themselves as the salesperson on non-commissionable transactions.</p>'
-      + commExampleHTML();
+      + '<p><b>Reminder:</b> staff may not list themselves as the salesperson on non-commissionable transactions.</p>';
   } else if(comm.verdict === 'tech'){
     why = 'The technician made this sale in the field — the office only sent the estimate.';
     head = 'Technician’s sale — not commissionable for the office';
@@ -2255,8 +2247,7 @@ function renderCommVerdict(el){
       + '<p>The client called about an <b>Inspection</b>, and <b>' + esc(sold.name) + '</b> flowed out of that completed inspection — the office sending the estimate is just processing the inspection result, not an office upsell, even though the item sold differs from what the client originally called about.</p>'
       + '<p><b>Before / after inspection — Rodent Service:</b> the table note is “if client approves before inspection” — a rodent service the client approves over the phone <b>before</b> any inspection is the commissionable case; a rodent service that comes <b>after / out of an inspection</b> is <b>not</b> the office’s sale.</p>'
       + '<p><b>Termite notes (§10.2 table):</b> Termite Installation — “Any quote sent &amp; approved (not from an inspection)”; Termite Transfer — “Any transfer of service (not from an inspection)”.</p>'
-      + '<p><b>§10.2 rule — Non Commissionable Scenarios:</b> “When a Field Technician recommends service and the office just sends the estimate, this is NOT a commissionable sale for the office it is sale for technician.”</p>'
-      + commTermiteExampleHTML();
+      + '<p><b>§10.2 rule — Non Commissionable Scenarios:</b> “When a Field Technician recommends service and the office just sends the estimate, this is NOT a commissionable sale for the office it is sale for technician.”</p>';
   } else if(comm.verdict === 'notcall'){
     why = 'That item is not one of the three phone-sale items, and it was not cross-sold on the phone either.';
     head = 'Not commissionable on a client call';
@@ -2267,8 +2258,7 @@ function renderCommVerdict(el){
     head = 'Not commissionable for the office';
     body = '<p><b>' + esc(sold.name) + '</b> is a cross-sell item — it pays 5% when the <b>office</b> brings it up on the call, beyond what the client called about. Here the client called about it themselves, so this is responding to their request, not a cross-sell.</p>'
       + '<p><b>§10.2 rule — Non Commissionable Scenarios:</b> “…this is not a commissionable sale, this is responding to the client’s request.”</p>'
-      + '<p><b>Reminder:</b> staff may not list themselves as the salesperson on non-commissionable transactions.</p>'
-      + commExampleHTML();
+      + '<p><b>Reminder:</b> staff may not list themselves as the salesperson on non-commissionable transactions.</p>';
   } else if(comm.verdict === 'direct'){
     why = 'Inspection, Rodent Service and a Plan are the items that earn commission as the direct sale on a client call.';
     head = 'Commissionable for the office';
@@ -2291,9 +2281,7 @@ function renderCommVerdict(el){
       + rateLine()
       + (sold.id === 'rodent' ? '<p><b>Rodent Service note (§10.2 table):</b> “if client approves before inspection” — approved over the phone <b>before</b> any inspection is the commissionable case. A rodent service that comes <b>after / out of an inspection</b> is <b>not</b> commissionable for the office.</p>' : '')
       + ((sold.id === 'tinstall' || sold.id === 'ttransfer') ? '<p><b>Note (§10.2 table):</b> “' + esc(sold.note) + '” — this sale was <b>not from an inspection</b>, so the cross-sell counts. A sale that comes after / out of an inspection would not be commissionable.</p>' : '')
-      + (sold.id === 'plan' ? commKeepSellingHTML() : '')
-      + commExampleHTML()
-      + commPestExampleHTML();
+      + (sold.id === 'plan' ? commKeepSellingHTML() : '');
   } else if(comm.verdict === 'fresh'){
     why = 'This came from an estimate that was already out — and it was still inside its 30-day window.';
     head = 'Commissionable for the office';
@@ -2317,8 +2305,7 @@ function renderCommVerdict(el){
     head = 'Commissionable — in two stages';
     body = '<p><b>Stage 1 — now:</b> upsell the <b>4 Visit Rodent Service</b> first. Rodent Service is commissionable now at <b>5%</b>.</p>'
       + '<p><b>Stage 2 — later:</b> the plan’s <b>$20</b> commission is <b>not</b> earned on this call — it gets added once the rodent service is complete and the client then signs the plan.</p>'
-      + '<p>The commission follows the same order as the Plan Pricing Tool rule (§2.4): the rodent cleanout comes before the plan.</p>'
-      + commRodentSeqExampleHTML();
+      + '<p>The commission follows the same order as the Plan Pricing Tool rule (§2.4): the rodent cleanout comes before the plan.</p>';
   }
   el.innerHTML = '<div class="qcard"><p class="wiz-step">Verdict</p><h3>' + head + '</h3>'
     + '<div class="comm-recap"><p><b>Client called about:</b> ' + esc(called.name) + '</p>'
@@ -2327,7 +2314,7 @@ function renderCommVerdict(el){
     + body
     + startOverBtn()
     + refBlock(10, '10.2', '10.2 Commissions', '§10.2 — Commissions')
-    + '</div>';
+    + '</div>' + commVerdictSummaryHTML();
   bindGoto(el);
   bindRestart(el, function(){ resetComm(); renderCommTool(); });
 }
