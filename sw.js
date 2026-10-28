@@ -1,6 +1,6 @@
 // QualityPro Office SOP — offline service worker
 // Bump VERSION whenever the app content changes so phones pick up the new build.
-const VERSION = 'office-sop-v30';
+const VERSION = 'office-sop-v31';
 const CORE = [
   './',
   './index.html',
