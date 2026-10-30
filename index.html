@@ -336,6 +336,7 @@
   .baton-call .bc-n a{color:var(--red);text-decoration:none}
   /* ---------- plan pricing tool ---------- */
   #pp-sched tr.hl td{background:var(--red-soft)}
+  #jt-matrix tr.hl td{background:var(--red-soft);font-weight:600}
   #pp-sched td.sel{font-weight:700;color:var(--red)}
   .pp-cmp-lbl{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:16px 0 2px}
 
@@ -922,6 +923,7 @@ var TOOLS = [
   { id:'pricing', name:'Plan Pricing Tool',       sub:'Step 1: pick the plan — select the pests or choose Silver, Gold or Platinum. Step 2: select Next and price it by the size of the home, Monthly or Quarterly.', ref:'§8.1–8.4', icon:'calc' },
   { id:'area',    name:'Service Area Checker',     sub:'Check a property address / ZIP against our \u00a73.6 service area.', ref:'\u00a73.6', icon:'route' },
   { id:'intake',  name:'New Lead Intake Script',   sub:'One combined flow for a new-lead call — the New Lead Script word for word, with the SOP intake steps woven in.', ref:'§2.1–2.5', icon:'phone' },
+  { id:'jobtime', name:'Job Time Calculator', sub:'Enter the estimate price — get the job time from the §5.2 Duration Guide Matrix.', ref:'§5.2', icon:'clock' },
   { id:'commission', name:'Commissions', sub:'§10.2 — commissionable items, verdict summary, policy', ref:'§10.2', icon:'receipt' }
 ];
 var currentTool = null;
@@ -1926,8 +1928,97 @@ function renderIntakeTool(){
 }
 
 
+/* ---------- TOOL: Job Time Calculator (§5.2) ---------- */
+/* Duration Guide Matrix — values exactly as written in §5.2. Ranges are
+   inclusive as written; "Under $500" means less than $500. Prices in the
+   gaps ($500–$599, $1,001–$1,999) or over $10,000 are not in the matrix
+   and must not be guessed. Shared edges ($4,000 / $6,000 / $8,000) belong
+   to both adjoining rows as written, so both times are shown. */
+var JT_ROWS = [
+  { label:'Under $500',      time:'Completed during 2nd Rodent Visit (~30 mins)', match:function(v){ return v < 500; } },
+  { label:'$600\u2013$1,000',   time:'2 to 4 Hours', match:function(v){ return v >= 600 && v <= 1000; } },
+  { label:'$2,000\u2013$4,000', time:'4 to 8 Hours', match:function(v){ return v >= 2000 && v <= 4000; } },
+  { label:'$4,000\u2013$6,000', time:'6 to 8 Hours', match:function(v){ return v >= 4000 && v <= 6000; } },
+  { label:'$6,000\u2013$8,000', time:'8 to 10 Hours', match:function(v){ return v >= 6000 && v <= 8000; } },
+  { label:'$8,000\u2013$10,000', time:'2 to 4 Complete Work Days', match:function(v){ return v >= 8000 && v <= 10000; } }
+];
+function jtNotesHTML(){
+  return '<p style="margin:12px 0 0"><b>Standard Time Calculation</b> \u2014 required labor hours or job days are based on the size of the structure and the number of areas requiring sealing.</p>'
+    + '<p style="margin:6px 0 0"><b>Rain Day Surcharge</b> \u2014 always add one extra day to the estimated schedule duration to account for potential weather delays.</p>';
+}
+function jtMatrixRows(){
+  var rows = [['Estimate price', 'Job time']];
+  JT_ROWS.forEach(function(r){ rows.push([r.label, r.time]); });
+  return rows;
+}
+function renderJobTimeTool(){
+  var el = toolBody();
+  el.innerHTML =
+    '<div class="qcard"><h3>Estimate price</h3>'
+    + '<p class="qsub">Job time comes from the \u00a75.2 Duration Guide Matrix and updates as you type.</p>'
+    + '<label class="fld"><span>Estimate price ($)</span><input id="jt-price" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 3500" /></label>'
+    + '<div id="jt-out"></div>'
+    + startOverBtn()
+    + refBlock(5, '5.2', '5.2 Job Time Estimating & Labor Hour Caps', '\u00a75.2 \u2014 Job Time Estimating &amp; Labor Hour Caps')
+    + '</div>'
+    + '<div class="qcard"><h3>Duration Guide Matrix</h3>'
+    + '<p class="qsub">Every row in \u00a75.2 at a glance \u2014 the row for the price above is highlighted.</p>'
+    + '<div id="jt-matrix">' + tableHTML(jtMatrixRows()) + '</div>'
+    + jtNotesHTML()
+    + refBlock(5, '5.2', '5.2 Job Time Estimating & Labor Hour Caps', '\u00a75.2 \u2014 Job Time Estimating &amp; Labor Hour Caps')
+    + '</div>';
+  bindGoto(el);
+  bindRestart(el, renderJobTimeTool);
+  document.getElementById('jt-price').addEventListener('input', jobTimeCalc);
+  jobTimeCalc();
+}
+function jobTimeCalc(){
+  var out = document.getElementById('jt-out');
+  if(!out) return;
+  var v = numVal('jt-price');
+  var matches = [];
+  if(v !== null && v > 0){
+    JT_ROWS.forEach(function(r, i){ if(r.match(v)) matches.push(i); });
+  }
+  var matrix = document.getElementById('jt-matrix');
+  if(matrix){
+    Array.prototype.forEach.call(matrix.querySelectorAll('tbody tr'), function(tr, ri){
+      tr.classList.toggle('hl', matches.indexOf(ri) > -1);
+    });
+  }
+  if(v === null || v <= 0){
+    out.innerHTML = '<p style="margin:0;color:var(--ink-2)">Enter the estimate price to see the job time.</p>' + jtNotesHTML();
+    return;
+  }
+  if(!matches.length){
+    out.innerHTML = '<div class="warn-box"><b>Not in the \u00a75.2 matrix \u2014 check with the office for the job time.</b><br />' + money(v) + ' does not fall in any row of the Duration Guide Matrix.</div>' + jtNotesHTML();
+    return;
+  }
+  if(matches.length === 1){
+    var row = JT_ROWS[matches[0]];
+    var bigStyle = row.time.length > 22 ? ' style="font-size:30px;line-height:1.15"' : '';
+    out.innerHTML = '<div class="result-box">'
+      + '<p class="ref-line" style="margin:0 0 6px">Estimate ' + money(v) + ' &rarr; ' + esc(row.label) + '</p>'
+      + '<div class="price-big"' + bigStyle + '>' + esc(row.time) + '</div>'
+      + jtNotesHTML()
+      + '</div>';
+    return;
+  }
+  /* Shared edge price (e.g. $4,000) — in two rows as the matrix is written. */
+  var h = '<div class="result-box">'
+    + '<p class="ref-line" style="margin:0 0 6px">Estimate ' + money(v) + ' &rarr; falls in two matrix rows as written</p>';
+  matches.forEach(function(i){
+    h += '<div class="price-row"><span class="pr-l">' + esc(JT_ROWS[i].label) + '</span><span class="pr-v" style="font-size:24px">' + esc(JT_ROWS[i].time) + '</span></div>';
+  });
+  h += '<p style="margin:8px 0 0">' + money(v) + ' is the shared edge of both rows above in \u00a75.2 \u2014 check with the office which job time applies.</p>'
+    + jtNotesHTML()
+    + '</div>';
+  out.innerHTML = h;
+}
+
 var TOOL_RENDER = {
   tick: renderTickTool,
+  jobtime: renderJobTimeTool,
   termite: function(){ renderTermiteTool(); },
   bee: function(){ resetBee(); renderBeeTool(); },
   plan: resetPlanPricingTool,
