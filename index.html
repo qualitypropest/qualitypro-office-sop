@@ -1882,15 +1882,15 @@ function renderIntakeTool(){
    ($4,000 / $6,000 / $8,000) belong to both adjoining rows as written, so
    both times are shown. */
 var JT_ROWS = [
-  { label:'Under $500',      time:'Completed during 2nd Rodent Visit (~30 mins)', match:function(v){ return v < 500; } },
-  { label:'$500\u2013$600',   time:'Up to 2 Hours', match:function(v){ return v >= 500 && v <= 600; } },
-  { label:'$601\u2013$1,200',   time:'2 to 4 Hours', match:function(v){ return v > 600 && v <= 1200; } },
-  { label:'$1,201\u2013$1,999', time:'4 to 6 Hours', match:function(v){ return v > 1200 && v < 2000; } },
-  { label:'$2,000\u2013$4,000', time:'4 to 8 Hours', match:function(v){ return v >= 2000 && v <= 4000; } },
-  { label:'$2,000\u2013$4,000', time:'4 to 8 Hours', match:function(v){ return v >= 2000 && v <= 4000; } },
-  { label:'$4,000\u2013$6,000', time:'6 to 8 Hours', match:function(v){ return v >= 4000 && v <= 6000; } },
-  { label:'$6,000\u2013$8,000', time:'8 to 10 Hours', match:function(v){ return v >= 6000 && v <= 8000; } },
-  { label:'$8,000\u2013$10,000', time:'2 to 4 Complete Work Days', match:function(v){ return v >= 8000 && v <= 10000; } }
+  { label:'Under $500',      time:'Completed during 2nd Rodent Visit (~30 mins)', hrs:[0.5, 0.5], match:function(v){ return v < 500; } },
+  { label:'$500\u2013$600',   time:'Up to 2 Hours', hrs:[null, 2], match:function(v){ return v >= 500 && v <= 600; } },
+  { label:'$601\u2013$1,200',   time:'2 to 4 Hours', hrs:[2, 4], match:function(v){ return v > 600 && v <= 1200; } },
+  { label:'$1,201\u2013$1,999', time:'4 to 6 Hours', hrs:[4, 6], match:function(v){ return v > 1200 && v < 2000; } },
+  { label:'$2,000\u2013$4,000', time:'4 to 8 Hours', hrs:[4, 8], match:function(v){ return v >= 2000 && v <= 4000; } },
+  { label:'$2,000\u2013$4,000', time:'4 to 8 Hours', hrs:[4, 8], match:function(v){ return v >= 2000 && v <= 4000; } },
+  { label:'$4,000\u2013$6,000', time:'6 to 8 Hours', hrs:[6, 8], match:function(v){ return v >= 4000 && v <= 6000; } },
+  { label:'$6,000\u2013$8,000', time:'8 to 10 Hours', hrs:[8, 10], match:function(v){ return v >= 6000 && v <= 8000; } },
+  { label:'$8,000\u2013$10,000', time:'2 to 4 Complete Work Days', hrs:[16, 32], days:true, match:function(v){ return v >= 8000 && v <= 10000; } }
 ];
 function jtNotesHTML(){
   return '<p style="margin:12px 0 0"><b>Standard Time Calculation</b> \u2014 required labor hours or job days are based on the size of the structure and the number of areas requiring sealing.</p>'
@@ -1901,12 +1901,92 @@ function jtMatrixRows(){
   JT_ROWS.forEach(function(r){ rows.push([r.label, r.time]); });
   return rows;
 }
+/* Loaded labor cost per hour — from the Labor Cost Calculator file
+   (Nov. 4, 2026). Each rate is that technician's "Wage Cost": total
+   annual cost (wages plus Social Security, Medicare, FUTA, unemployment
+   insurance, health coverage, bonuses and overtime) divided by 1,960
+   hours. Team rates are the file's combined rate for both technicians
+   working together, per hour. */
+var JT_TECHS = [
+  ['Adrian', 38.65], ['Andrew', 33.82], ['Berto', 28.95], ['Brandon', 29.35],
+  ['Esteban', 24.46], ['Gage', 28.00], ['Hector', 34.64], ['Jose', 34.68],
+  ['Josh', 60.76], ['Juan', 27.46], ['Luis S.', 39.31], ['Luis E.', 31.84],
+  ['Mauricio', 26.01], ['Miguel', 25.01], ['Nowel', 30.28], ['Romano', 23.01]
+];
+var JT_TEAMS = [
+  ['Team 1 \u2014 Luis/Jose', 63.47],
+  ['Team 2 \u2014 Adrian/Berto', 75.82],
+  ['Team 3 \u2014 Andrew/Mauricio', 64.65]
+];
+var jtCrewId = 'avg';
+function jtCrews(){
+  var sum = 0;
+  JT_TECHS.forEach(function(t){ sum += t[1]; });
+  var avg = Math.round((sum / JT_TECHS.length) * 100) / 100;
+  var crews = [{ id:'avg', name:'Average technician', rate:avg }];
+  JT_TEAMS.forEach(function(t, i){ crews.push({ id:'team' + (i + 1), name:t[0], rate:t[1] }); });
+  JT_TECHS.forEach(function(t){ crews.push({ id:'tech-' + t[0], name:t[0], rate:t[1] }); });
+  return crews;
+}
+function jtCrew(){
+  var crews = jtCrews(), i;
+  for(i = 0; i < crews.length; i++){ if(crews[i].id === jtCrewId) return crews[i]; }
+  return crews[0];
+}
+function jtCrewOptions(){
+  var crews = jtCrews();
+  var h = '<option value="avg"' + (jtCrewId === 'avg' ? ' selected' : '') + '>Average technician \u2014 ' + money(crews[0].rate) + '/hr</option>';
+  h += '<optgroup label="Two-technician teams (combined rate)">';
+  JT_TEAMS.forEach(function(t, i){
+    var id = 'team' + (i + 1);
+    h += '<option value="' + id + '"' + (jtCrewId === id ? ' selected' : '') + '>' + esc(t[0]) + ' \u2014 ' + money(t[1]) + '/hr</option>';
+  });
+  h += '</optgroup><optgroup label="Individual technicians">';
+  JT_TECHS.forEach(function(t){
+    var id = 'tech-' + t[0];
+    h += '<option value="' + id + '"' + (jtCrewId === id ? ' selected' : '') + '>' + esc(t[0]) + ' \u2014 ' + money(t[1]) + '/hr</option>';
+  });
+  h += '</optgroup>';
+  return h;
+}
+function jtLaborRows(){
+  var rows = [['Who', 'Loaded cost / hr']];
+  rows.push(['Average technician', money(jtCrews()[0].rate)]);
+  JT_TECHS.forEach(function(t){ rows.push([t[0], money(t[1])]); });
+  JT_TEAMS.forEach(function(t){ rows.push([t[0] + ' (both techs)', money(t[1])]); });
+  return rows;
+}
+function jtHrsText(row){
+  var lo = row.hrs[0], hi = row.hrs[1];
+  if(lo === null) return 'up to ' + hi + ' hrs';
+  if(lo === hi) return lo + (lo === 1 ? ' hr' : ' hrs');
+  if(row.days) return (lo / 8) + '\u2013' + (hi / 8) + ' days (' + lo + '\u2013' + hi + ' hrs at 8 hrs/day)';
+  return lo + '\u2013' + hi + ' hrs';
+}
+function jtLaborHTML(row, v){
+  var c = jtCrew();
+  var lo = row.hrs[0], hi = row.hrs[1];
+  var cost, pct;
+  if(lo === null){
+    cost = 'Up to ' + money(hi * c.rate);
+    pct = 'up to ' + Math.round(hi * c.rate / v * 100) + '%';
+  } else if(lo === hi){
+    cost = money(lo * c.rate);
+    pct = 'about ' + Math.round(lo * c.rate / v * 100) + '%';
+  } else {
+    cost = money(lo * c.rate) + ' \u2013 ' + money(hi * c.rate);
+    pct = 'about ' + Math.round(lo * c.rate / v * 100) + '%\u2013' + Math.round(hi * c.rate / v * 100) + '%';
+  }
+  return '<div class="price-row"><span class="pr-l">Labor cost \u2014 ' + esc(c.name) + '</span><span class="pr-v" style="font-size:24px">' + cost + '</span></div>'
+    + '<p style="margin:8px 0 0">' + jtHrsText(row) + ' \u00d7 ' + money(c.rate) + '/hr loaded labor rate \u2014 labor is ' + pct + ' of the ' + money(v) + ' estimate.</p>';
+}
 function renderJobTimeTool(){
   var el = toolBody();
   el.innerHTML =
     '<div class="qcard"><h3>Estimate price</h3>'
-    + '<p class="qsub">Job time comes from the \u00a75.2 Duration Guide Matrix and updates as you type.</p>'
+    + '<p class="qsub">Job time comes from the \u00a75.2 Duration Guide Matrix and updates as you type. Pick who is doing the job and the labor cost is figured in at that technician\u2019s loaded hourly rate.</p>'
     + '<label class="fld"><span>Estimate price ($)</span><input id="jt-price" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 3500" /></label>'
+    + '<label class="fld"><span>Who is doing the job?</span><select id="jt-crew">' + jtCrewOptions() + '</select></label>'
     + '<div id="jt-out"></div>'
     + startOverBtn()
     + refBlock(5, '5.2', '5.2 Job Time Estimating & Labor Hour Caps', '\u00a75.2 \u2014 Job Time Estimating &amp; Labor Hour Caps')
@@ -1916,10 +1996,16 @@ function renderJobTimeTool(){
     + '<div id="jt-matrix">' + tableHTML(jtMatrixRows()) + '</div>'
     + jtNotesHTML()
     + refBlock(5, '5.2', '5.2 Job Time Estimating & Labor Hour Caps', '\u00a75.2 \u2014 Job Time Estimating &amp; Labor Hour Caps')
+    + '</div>'
+    + '<div class="qcard"><h3>Labor cost per hour</h3>'
+    + '<p class="qsub">Loaded rates from the Labor Cost Calculator \u2014 what each technician or team costs the company per hour on the job.</p>'
+    + tableHTML(jtLaborRows())
+    + '<p style="margin:12px 0 0">Each rate is that technician\u2019s total annual cost \u2014 wages plus Social Security, Medicare, FUTA, unemployment insurance, health coverage, bonuses and overtime \u2014 divided by 1,960 hours. Team rates are the combined loaded cost per hour for both technicians together. Work days in the matrix are counted at 8 hours for labor cost.</p>'
     + '</div>';
   bindGoto(el);
   bindRestart(el, renderJobTimeTool);
   document.getElementById('jt-price').addEventListener('input', jobTimeCalc);
+  document.getElementById('jt-crew').addEventListener('change', function(){ jtCrewId = this.value; jobTimeCalc(); });
   jobTimeCalc();
 }
 function jobTimeCalc(){
@@ -1950,6 +2036,7 @@ function jobTimeCalc(){
     out.innerHTML = '<div class="result-box">'
       + '<p class="ref-line" style="margin:0 0 6px">Estimate ' + money(v) + ' &rarr; ' + esc(row.label) + '</p>'
       + '<div class="price-big"' + bigStyle + '>' + esc(row.time) + '</div>'
+      + jtLaborHTML(row, v)
       + jtNotesHTML()
       + '</div>';
     return;
@@ -1959,6 +2046,7 @@ function jobTimeCalc(){
     + '<p class="ref-line" style="margin:0 0 6px">Estimate ' + money(v) + ' &rarr; falls in two matrix rows as written</p>';
   matches.forEach(function(i){
     h += '<div class="price-row"><span class="pr-l">' + esc(JT_ROWS[i].label) + '</span><span class="pr-v" style="font-size:24px">' + esc(JT_ROWS[i].time) + '</span></div>';
+    h += jtLaborHTML(JT_ROWS[i], v);
   });
   h += '<p style="margin:8px 0 0">' + money(v) + ' is the shared edge of both rows above in \u00a75.2 \u2014 check with the office which job time applies.</p>'
     + jtNotesHTML()
